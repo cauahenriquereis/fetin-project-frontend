@@ -11,6 +11,7 @@ export default function Formulario() {
     const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>([]);
     const [outroSintoma, setOutroSintoma] = useState("");
     const [nivelDor, setNivelDor] = useState<number | null>(null);
+    const [erro, setErro] = useState("");
 
      function toggleSintoma(sintoma: string) {
       if (sintomasSelecionados.includes(sintoma)) {
@@ -24,10 +25,68 @@ export default function Formulario() {
         setNivelDor(nivel);
     }
 
+    function validarFormulario(): boolean {
+        if (nomeCompleto.trim() === "") {
+        setErro("Por favor, preencha o nome completo.");
+        return false;
+    }
+
+    if (idade <= 0) {
+        setErro("Por favor, informe uma idade válida.");
+        return false;
+    }
+
+    if (sintomasSelecionados.length === 0 && outroSintoma.trim() === "") {
+        setErro("Selecione ao menos um sintoma.");
+        return false;
+    }
+
+    if (nivelDor === null) {
+        setErro("Selecione o nível de dor.");
+        return false;
+    }
+
+    setErro("");
+    return true;
+    }
+
+    async function lidarComEnvio() {
+    if (validarFormulario()) {
+        const dadosParaEnviar = {
+            full_name: nomeCompleto,
+            age: idade,
+            symptoms: [...sintomasSelecionados, outroSintoma].filter(Boolean).join(", "),
+            pain_level: nivelDor,
+            };
+        
+        
+    try {
+        const resposta = await fetch("http://127.0.0.1:8000/patients/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dadosParaEnviar),
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao enviar formulário");
+        }
+
+        const paciente = await resposta.json();
+        console.log(paciente);
+
+        } catch (error) {
+        setErro("Não foi possível enviar o formulário. Tente novamente.");
+        }
+    }
+    }
+
 
     return (
     <main>
         <h1>Formulário do Paciente</h1>
+
+        {erro && <p style={{ color: "red" }}>{erro}</p>}
+
         <input
         type="text"
         value={nomeCompleto}
@@ -60,6 +119,9 @@ export default function Formulario() {
         {nivel}
         </button>
         ))}
+
+        <button onClick={lidarComEnvio}>Enviar</button>
+        
 
 
 
