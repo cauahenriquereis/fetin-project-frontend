@@ -1,8 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function Formulario() {
+
+    const router = useRouter();
 
     const niveisDeDor = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     
@@ -50,36 +54,23 @@ export default function Formulario() {
     return true;
     }
 
-    async function lidarComEnvio() {
+    function lidarComEnvio() {
     if (validarFormulario()) {
-        const dadosParaEnviar = {
-            full_name: nomeCompleto,
-            age: idade,
-            symptoms: [...sintomasSelecionados, outroSintoma].filter(Boolean).join(", "),
-            pain_level: nivelDor,
-            };
-        
-        
-    try {
-        const resposta = await fetch("http://127.0.0.1:8000/patients/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dadosParaEnviar),
-        });
+      const sintomasFinais = [...sintomasSelecionados, outroSintoma].filter(Boolean).join(",");
+      
+      const dadosTriagem = {
+        full_name: nomeCompleto,
+        age: idade,
+        symptoms: sintomasFinais,
+        pain_level: nivelDor,
+      };
 
-        if (!resposta.ok) {
-            throw new Error("Erro ao enviar formulário");
-        }
-
-        const paciente = await resposta.json();
-        console.log(paciente);
-
-        } catch (error) {
-        setErro("Não foi possível enviar o formulário. Tente novamente.");
-        }
+      sessionStorage.setItem("dadosTriagem", JSON.stringify(dadosTriagem));
+      router.push("/analisando");
     }
-    }
+  }
 
+    
 
     return (
     <main>
