@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Analisando() {
   const router = useRouter();
+  const jaEnviou = useRef(false);
 
   useEffect(() => {
+    if (jaEnviou.current)return;
+    jaEnviou.current = true;
+    
     async function enviarParaAnalise() {
       const dadosSalvos = sessionStorage.getItem("dadosTriagem");
       
