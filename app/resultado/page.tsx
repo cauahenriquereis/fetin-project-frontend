@@ -22,14 +22,20 @@ export default function Resultado() {
  
   const router = useRouter();
   const jaEnviou = useRef(false);
+
   const searchParams = useSearchParams();
   const id = searchParams.get("id"); 
+  
   const [informacoes, setInformacoes] = useState<PatientQueueInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
-  async function buscarDadosPaciente(id:string) {
+useEffect(() => {
 
+    if (jaEnviou.current) return;
+    jaEnviou.current = true;
+
+    async function buscarDadosPaciente(id:string) {
     setLoading(true); 
     setErro(null);
 
@@ -51,21 +57,17 @@ export default function Resultado() {
     setErro("Erro ao buscar dados do paciente");
   }
 }
-
-useEffect(() => {
-    if (jaEnviou.current) return;
-    jaEnviou.current = true;
     if (id) {
       buscarDadosPaciente(id);
     }
-  }, [id]);
 
-useEffect(() => {
-  if (!id) {
-    router.push("/formulario");
-  }
-}, [id, router]);
+    else {
+      router.push("/formulario");
+    }
+  }, [id, router]);
 
+
+  if (!id) return null;
   if (loading) return <p>Analisando seus dados...</p>;
   if (erro) return <p>Erro: {erro}</p>;
   if (!informacoes) return <p>Nenhum dado encontrado</p>;
