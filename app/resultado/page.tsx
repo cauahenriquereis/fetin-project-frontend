@@ -10,8 +10,8 @@ type PatientQueueInfo = {
     age: number;
     symptoms: string;
     pain_level: number;
-    urgency_level: string | null;
-    priority_number: number | null;
+    urgency_level: string;
+    priority_number: number;
     status: string;
     created_at: string;
   };

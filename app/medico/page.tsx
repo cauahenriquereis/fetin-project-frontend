@@ -7,8 +7,8 @@ type PatientOutput = {
   age: number;
   symptoms: string;
   pain_level: number;
-  urgency_level: string | null;
-  priority_number: number | null;
+  urgency_level: string;
+  priority_number: number;
   status: string;
   created_at: string;
 };
@@ -61,7 +61,7 @@ export default function Medico() {
       });
 
       if (!response.ok) {
-        throw new Error("Senha incorreta");
+        throw new Error("Erro ao fazer login. Tente novamente.");
       }
 
       const dados = await response.json();
@@ -80,7 +80,7 @@ export default function Medico() {
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setLoadingLogin(false);
-      setErroLogin("Senha incorreta");
+      setErroLogin("Erro ao fazer login. Tente novamente.");
     }
   }
 
@@ -93,7 +93,9 @@ export default function Medico() {
         headers: { "Authorization": `Bearer ${tokens.refresh_token}` },
       });
 
-      if (!response.ok) throw new Error("Erro ao refrescar token");
+      if (!response.ok) {
+        throw new Error("Erro ao refrescar tokens");
+      }
 
       const dados = await response.json();
       const tokensAtualizados: Tokens = {
@@ -159,7 +161,9 @@ export default function Medico() {
 
     try {
       const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/status`);
-      if (!response.ok) throw new Error("Erro ao buscar dados da fila");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar dados da fila");
+      }
 
       const dadosFila = await response.json();
       setInformacoes(dadosFila);
@@ -178,7 +182,9 @@ export default function Medico() {
 
     try {
       const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/next/`);
-      if (!response.ok) throw new Error("Erro ao buscar próximo paciente da fila");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar próximo paciente da fila");
+      }
 
       const dadosProximoPaciente = await response.json();
       setInformacoes(dadosProximoPaciente);
@@ -197,7 +203,9 @@ export default function Medico() {
 
     try {
       const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/status/${id}`);
-      if (!response.ok) throw new Error("Erro ao buscar status do paciente");
+      if (!response.ok) {
+        throw new Error("Erro ao buscar status do paciente");
+      }
 
       const dadosStatusPaciente = await response.json();
       setInformacoes(dadosStatusPaciente);
@@ -221,7 +229,9 @@ export default function Medico() {
         body: JSON.stringify({ new_status: status }),
       });
 
-      if (!response.ok) throw new Error("Erro ao atualizar status do paciente");
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar status do paciente");
+      }
 
       const dadosAtualizados = await response.json();
       setInformacoes(dadosAtualizados);
@@ -243,7 +253,9 @@ export default function Medico() {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Erro ao remover paciente");
+      if (!response.ok) {
+        throw new Error("Erro ao remover paciente");
+      }
 
       const dadosRemovidos = await response.json();
       setInformacoes(dadosRemovidos);
@@ -269,7 +281,7 @@ export default function Medico() {
         <ul>
           {dados.map((paciente) => (
             <li key={paciente.id}>
-              {paciente.full_name} — {paciente.urgency_level ?? "sem classificação"} — status: {paciente.status}
+              {paciente.full_name} — {paciente.urgency_level} — status: {paciente.status}
             </li>
           ))}
         </ul>
@@ -280,7 +292,7 @@ export default function Medico() {
       <div>
         <p>Nome: {dados.full_name}</p>
         <p>Idade: {dados.age}</p>
-        <p>Urgência: {dados.urgency_level ?? "sem classificação"}</p>
+        <p>Urgência: {dados.urgency_level}</p>
         <p>Status: {dados.status}</p>
       </div>
     );
@@ -310,8 +322,8 @@ export default function Medico() {
     const id = Number(idDigitado);
 
     if (acaoAtiva === "status") pacienteStatus(id);
-    if (acaoAtiva === "atualizar") atualizarPacienteStatus(id, statusEscolhido);
-    if (acaoAtiva === "remover") removerPaciente(id);
+    else if (acaoAtiva === "atualizar") atualizarPacienteStatus(id, statusEscolhido);
+    else if (acaoAtiva === "remover") removerPaciente(id);
   }
 
   if (!logado) {
