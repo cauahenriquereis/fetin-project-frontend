@@ -3,19 +3,21 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
- type PatientQueueInfo = {
-    patient: {
-      id: number;
-      full_name: string;
-      age: number;
-      symptoms: string;
-      pain_level: number;
-      urgency_level: string;
-      priority_number: number;
-    };
-    queue_position: number;
-    waiting_time_minutes: number;
-  }; 
+type PatientQueueInfo = {
+  patient: {
+    id: number;
+    full_name: string;
+    age: number;
+    symptoms: string;
+    pain_level: number;
+    urgency_level: string | null;
+    priority_number: number | null;
+    status: string;
+    created_at: string;
+  };
+  queue_position: number;
+  waiting_time_minutes: number;
+} 
 
 export default function Resultado() {
 
@@ -43,7 +45,7 @@ useEffect(() => {
     const response = await fetch(`http://127.0.0.1:8000/patients/${id}`);
     
     if (!response.ok) {    
-      throw new Error("Erro ao enviar os dados para análise");
+      throw new Error("Erro ao buscar dados do paciente");
     }
 
     const dadosPaciente = await response.json();
