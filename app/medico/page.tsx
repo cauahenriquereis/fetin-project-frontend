@@ -31,6 +31,8 @@ export default function Medico() {
   const [tokens, setTokens] = useState<Tokens | null>(null);
   const [erroLogin, setErroLogin] = useState<string | null>(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
+  const [verificandoSessao, setVerificandoSessao] = useState(true);
+
 
   const [acaoAtiva, setAcaoAtiva] = useState<string | null>(null);
   const [idDigitado, setIdDigitado] = useState("");
@@ -47,6 +49,7 @@ export default function Medico() {
       setTokens(tokensParsed);
       setLogado(true);
     }
+    setVerificandoSessao(false);
   }, []);
 
   async function fazerLogin() {
@@ -325,6 +328,10 @@ export default function Medico() {
     else if (acaoAtiva === "atualizar") atualizarPacienteStatus(id, statusEscolhido);
     else if (acaoAtiva === "remover") removerPaciente(id);
   }
+
+  if (verificandoSessao) {
+  return null;
+}
 
   if (!logado) {
     return (
