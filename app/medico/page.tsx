@@ -41,7 +41,7 @@ export default function Medico() {
   const [erro, setErro] = useState<string | null>(null);
 
   useEffect(() => {
-    const tokensArmazenados = localStorage.getItem("medico_tokens");
+    const tokensArmazenados = sessionStorage.getItem("medico_tokens");
     if (tokensArmazenados) {
       const tokensParsed = JSON.parse(tokensArmazenados);
       setTokens(tokensParsed);
@@ -71,7 +71,7 @@ export default function Medico() {
         refresh_token: dados.refresh_token,
       };
 
-      localStorage.setItem("medico_tokens", JSON.stringify(tokensParaSalvar));
+      sessionStorage.setItem("medico_tokens", JSON.stringify(tokensParaSalvar));
       setTokens(tokensParaSalvar);
       setLogado(true);
       setSenhaDigitada("");
@@ -103,7 +103,7 @@ export default function Medico() {
         refresh_token: tokens.refresh_token,
       };
 
-      localStorage.setItem("medico_tokens", JSON.stringify(tokensAtualizados));
+      sessionStorage.setItem("medico_tokens", JSON.stringify(tokensAtualizados));
       setTokens(tokensAtualizados);
       return tokensAtualizados;
 
@@ -115,7 +115,7 @@ export default function Medico() {
   }
 
   function logout() {
-    localStorage.removeItem("medico_tokens");
+    sessionStorage.removeItem("medico_tokens");
     setTokens(null);
     setLogado(false);
     setAcaoAtiva(null);
