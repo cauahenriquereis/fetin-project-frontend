@@ -37,7 +37,7 @@ export default function Home() {
         </button>
       </Link>
 
-      <div className="absolute bottom-0 right-0 w-[500px] h-[400px] bg-[#dff0f4] rounded-full translate-x-20 translate-y-20">
+      <div className="absolute bottom-0 right-0 w-[600px] h-[550px] bg-[#dff0f4] rounded-full translate-x-35 translate-y-35">
       </div>
 
     </main>
