@@ -91,7 +91,7 @@ export default function Formulario() {
       <div className="grid grid-cols-[1fr_3px_1fr] flex-1">
 
         {/* Coluna Esquerda */}
-        <div className="flex flex-col gap-20 p-16">
+        <div className="flex flex-col gap-12 p-10">
 
           {/* Dados Pessoais */}
           <div className="flex flex-col gap-6">
@@ -156,7 +156,7 @@ export default function Formulario() {
         <div className="bg-[#00526e] my-10"></div>
 
         {/* Coluna Direita */}
-        <div className="flex flex-col gap-16 p-16">
+        <div className="flex flex-col gap-10 p-12">
 
           {/* Nível de Dor */}
           <div className="flex flex-col gap-6">
