@@ -33,32 +33,35 @@ export default function Resultado() {
   const [informacoes, setInformacoes] = useState<PatientQueueInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
+  const [verificandoSessao, setVerificandoSessao] = useState(true);
 
 useEffect(() => {
 
     if (jaEnviou.current) return;
     jaEnviou.current = true;
 
-    async function buscarDadosPaciente(id:string) {
-    setLoading(true); 
-    setErro(null);
+    async function buscarDadosPaciente(id: string) {
+  setLoading(true);
+  setErro(null);
 
-    try {
+  try {
     const response = await fetch(`http://127.0.0.1:8000/patients/${id}`);
-    
-    if (!response.ok) {    
+
+    if (!response.ok) {
       throw new Error("Erro ao buscar dados do paciente");
     }
 
     const dadosPaciente = await response.json();
     console.log("Dados recebidos:", dadosPaciente);
-    setInformacoes(dadosPaciente); 
-    setLoading(false);   
+    setInformacoes(dadosPaciente);
+    setLoading(false);
+    setVerificandoSessao(false); 
 
   } catch (error) {
     console.error("Erro ao buscar dados do paciente:", error);
     setLoading(false);
     setErro("Erro ao buscar dados do paciente");
+    setVerificandoSessao(false); 
   }
 }
     if (id) {
@@ -68,13 +71,29 @@ useEffect(() => {
     else {
       router.push("/formulario");
     }
+
+  
   }, [id, router]);
 
 
+  if (verificandoSessao || loading) return (
+    <main className="min-h-screen bg-slate-100">
+    </main>
+  );
+
   if (!id) return null;
-  if (loading) return <p>Analisando seus dados...</p>;
-  if (erro) return <p>Erro: {erro}</p>;
-  if (!informacoes) return <p>Nenhum dado encontrado</p>;
+
+  if (erro) return (
+    <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+      <p className="text-2xl text-red-500">{erro}</p>
+    </main>
+  );
+
+  if (!informacoes) return (
+    <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+      <p className="text-2xl text-gray-600">Nenhum dado encontrado</p>
+    </main>
+  );
 
  const config = {
   alta: {
