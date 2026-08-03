@@ -333,27 +333,37 @@ export default function Medico() {
   return null;
 }
 
-  if (!logado) {
-    return (
-      <main>
-        <h1>Painel do Médico</h1>
-        <p>Digite a senha para acessar</p>
+ if (!logado) {
+  return (
+    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden">
+      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
+
+      <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md z-10">
+        <h1 className="text-3xl font-bold text-[#00526e]">Painel do Médico</h1>
+        <p className="text-gray-500 text-lg">Digite a senha para acessar</p>
 
         <input
           type="password"
           value={senhaDigitada}
           onChange={(e) => setSenhaDigitada(e.target.value)}
           placeholder="Senha"
+          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
         />
 
-        <button disabled={loadingLogin} onClick={fazerLogin}>
+        <button
+          disabled={loadingLogin}
+          onClick={fazerLogin}
+          className="bg-[#0097b2] hover:bg-[#00526e] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+        >
           {loadingLogin ? "Entrando..." : "Entrar"}
         </button>
 
-        {erroLogin && <p style={{ color: "red" }}>Erro: {erroLogin}</p>}
-      </main>
-    );
-  }
+        {erroLogin && <p className="text-red-500 font-semibold text-lg text-center">{erroLogin}</p>}
+      </div>
+    </main>
+  );
+}
 
   if (!acaoAtiva) {
     return (

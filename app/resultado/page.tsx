@@ -37,10 +37,10 @@ export default function Resultado() {
 
 useEffect(() => {
 
-    if (jaEnviou.current) return;
-    jaEnviou.current = true;
+  if (jaEnviou.current) return;
+  jaEnviou.current = true;
 
-    async function buscarDadosPaciente(id: string) {
+  async function buscarDadosPaciente(id: string) {
   setLoading(true);
   setErro(null);
 
