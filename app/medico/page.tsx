@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { Hospital } from "lucide-react";
 
 type PatientOutput = {
   id: number;
@@ -335,13 +336,18 @@ export default function Medico() {
 
  if (!logado) {
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden">
-      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
+    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden relative">
+
+      <div className="border-4 border-[#0087b2] rounded-full p-4">
+        <Hospital size={80} className="text-gray-800" />
+      </div>
+
+      <div className="absolute top-0 left-0 w-[500px] h-[450px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
+      <div className="absolute bottom-0 right-0 w-[550px] h-[500px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
 
       <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md z-10">
-        <h1 className="text-3xl font-bold text-[#00526e]">Painel do Médico</h1>
-        <p className="text-gray-500 text-lg">Digite a senha para acessar</p>
+        <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
+        <p className="text-lg text-gray-800">Digite a senha para acessar</p>
 
         <input
           type="password"
@@ -354,7 +360,7 @@ export default function Medico() {
         <button
           disabled={loadingLogin}
           onClick={fazerLogin}
-          className="bg-[#0097b2] hover:bg-[#00526e] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
         >
           {loadingLogin ? "Entrando..." : "Entrar"}
         </button>

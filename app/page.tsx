@@ -8,7 +8,7 @@ export default function Home() {
       
 
       <div className="border-4 border-[#0087b2] rounded-full p-4">
-        <Hospital size={60} className="text-gray-800" />
+        <Hospital size={80} className="text-gray-800" />
       </div>
 
       <div className="absolute top-0 left-0 w-[500px] h-[400px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40">
