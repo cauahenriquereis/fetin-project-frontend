@@ -353,6 +353,7 @@ export default function Medico() {
           type="password"
           value={senhaDigitada}
           onChange={(e) => setSenhaDigitada(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && fazerLogin()}
           placeholder="Senha"
           className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
         />
