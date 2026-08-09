@@ -334,40 +334,55 @@ export default function Medico() {
   return null;
 }
 
- if (!logado) {
+if (!logado) {
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden relative">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
 
-      <div className="border-4 border-[#0087b2] rounded-full p-4">
-        <Hospital size={80} className="text-gray-800" />
+      {/* Header */}
+      <header className="bg-[#00526d] flex items-center px-10 py-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
+            <span className="text-white font-bold text-5xl">+</span>
+          </div>
+          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
+          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
+            <span className="text-white font-semibold text-lg">Painel Médico</span>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-col flex-1 items-center justify-center gap-8">
+
+        <div className="border-4 border-[#0087b2] rounded-full p-4">
+          <Hospital size={80} className="text-gray-800" />
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
+          <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
+          <p className="text-lg text-gray-800">Digite a senha para acessar</p>
+
+          <input
+            type="password"
+            value={senhaDigitada}
+            onChange={(e) => setSenhaDigitada(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && fazerLogin()}
+            placeholder="Senha"
+            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          />
+
+          <button
+            disabled={loadingLogin}
+            onClick={fazerLogin}
+            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+          >
+            {loadingLogin ? "Entrando..." : "Entrar"}
+          </button>
+
+          {erroLogin && <p className="text-red-500 font-semibold text-lg text-center">{erroLogin}</p>}
+        </div>
+
       </div>
 
-      <div className="absolute top-0 left-0 w-[500px] h-[450px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
-      <div className="absolute bottom-0 right-0 w-[550px] h-[500px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
-
-      <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md z-10">
-        <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
-        <p className="text-lg text-gray-800">Digite a senha para acessar</p>
-
-        <input
-          type="password"
-          value={senhaDigitada}
-          onChange={(e) => setSenhaDigitada(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && fazerLogin()}
-          placeholder="Senha"
-          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-        />
-
-        <button
-          disabled={loadingLogin}
-          onClick={fazerLogin}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
-        >
-          {loadingLogin ? "Entrando..." : "Entrar"}
-        </button>
-
-        {erroLogin && <p className="text-red-500 font-semibold text-lg text-center">{erroLogin}</p>}
-      </div>
     </main>
   );
 }
