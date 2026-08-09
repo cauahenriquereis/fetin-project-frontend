@@ -374,55 +374,69 @@ export default function Medico() {
 
   if (!acaoAtiva) {
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden relative">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
 
-      <div className="absolute top-0 left-0 w-[500px] h-[450px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
-      <div className="absolute bottom-0 right-0 w-[550px] h-[500px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
+      {/* Header fixo */}
+      <header className="bg-[#00526d] flex items-center px-10 py-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
+            <span className="text-white font-bold text-5xl">+</span>
+          </div>
+          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
+          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
+            <span className="text-white font-semibold text-lg">Painel Médico</span>
+          </div>
+        </div>
+      </header>
 
-      <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-4 w-full max-w-md z-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">Menu Médico</h1>
+      {/* Conteúdo central */}
+      <div className="flex flex-1 items-center justify-center p-10">
+        <div className="bg-[#ebf1f9] rounded-3xl p-10 flex flex-col items-center gap-5 w-full max-w-2xl">
+          <h1 className="text-4xl font-bold text-[#00526d] mb-4 tracking-wide">MENU MÉDICO</h1>
 
-        <button
-          onClick={() => { setAcaoAtiva("fila"); buscarFilaOrdenada(); }}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full"
-        >
-          Buscar Fila Ordenada
-        </button>
+          <button
+            onClick={() => { setAcaoAtiva("fila"); buscarFilaOrdenada(); }}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Fila Ordenada
+          </button>
 
-        <button
-          onClick={() => { setAcaoAtiva("proximo"); buscarProximoPaciente(); }}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full"
-        >
-          Buscar Próximo Paciente
-        </button>
+          <button
+            onClick={() => { setAcaoAtiva("proximo"); buscarProximoPaciente(); }}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Próximo Paciente
+          </button>
 
-        <button
-          onClick={() => setAcaoAtiva("status")}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full"
-        >
-          Buscar Status do Paciente
-        </button>
+          <button
+            onClick={() => setAcaoAtiva("status")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Status Paciente
+          </button>
 
-        <button
-          onClick={() => setAcaoAtiva("atualizar")}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full"
-        >
-          Atualizar Status do Paciente
-        </button>
+          <button
+            onClick={() => setAcaoAtiva("atualizar")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Atualizar Status Paciente
+          </button>
 
-        <button
-          onClick={() => setAcaoAtiva("remover")}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full"
-        >
-          Remover Paciente
-        </button>
+          <button
+            onClick={() => setAcaoAtiva("remover")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Remover Paciente
+          </button>
 
-        <button
-          onClick={logout}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full mt-4"
-        >
-          Logout
-        </button>
+          <button
+            onClick={logout}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-5 rounded-full text-2xl transition-colors border-3 border-red-900 w-full mt-2"
+          >
+            LOGOUT
+          </button>
+
+        </div>
       </div>
 
     </main>
@@ -431,18 +445,103 @@ export default function Medico() {
 
   if (acaoAtiva === "fila" || acaoAtiva === "proximo") {
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-6 overflow-hidden relative p-8">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
 
-      <div className="absolute top-0 left-0 w-[500px] h-[450px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
-      <div className="absolute bottom-0 right-0 w-[550px] h-[500px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
+      {/* Header */}
+      <header className="bg-[#00526d] flex items-center px-10 py-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
+            <span className="text-white font-bold text-5xl">+</span>
+          </div>
+          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
+          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
+            <span className="text-white font-semibold text-lg">Painel Médico</span>
+          </div>
+        </div>
+      </header>
 
-      <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl z-10">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          {acaoAtiva === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
+      <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
+        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {acaoAtiva === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
+          </h2>
+
+          {loading && <p className="text-gray-500 text-lg">Carregando...</p>}
+          {erro && <p className="text-red-500 text-lg">{erro}</p>}
+          {informacoes && !loading && !erro && (
+            <div className="text-gray-800 text-lg">
+              {exibirInformacoes(informacoes)}
+            </div>
+          )}
+        </div>
+
+        <button
+          onClick={voltarAoMenu}
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors"
+        >
+          Voltar ao Menu
+        </button>
+      </div>
+
+    </main>
+  );
+}
+
+  return (
+  <main className="min-h-screen bg-slate-100 flex flex-col">
+
+    {/* Header */}
+    <header className="bg-[#00526d] flex items-center px-10 py-6">
+      <div className="flex items-center gap-4">
+        <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
+          <span className="text-white font-bold text-5xl">+</span>
+        </div>
+        <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
+        <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
+          <span className="text-white font-semibold text-lg">Painel Médico</span>
+        </div>
+      </div>
+    </header>
+
+    <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
+
+      <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          {acaoAtiva === "status" && "Buscar Status do Paciente"}
+          {acaoAtiva === "atualizar" && "Atualizar Status do Paciente"}
+          {acaoAtiva === "remover" && "Remover Paciente"}
         </h2>
 
-        {loading && <p className="text-gray-500 text-lg">Carregando...</p>}
-        {erro && <p className="text-red-500 text-lg">{erro}</p>}
+        <input
+          type="number"
+          value={idDigitado}
+          onChange={(e) => setIdDigitado(e.target.value)}
+          placeholder="ID do paciente"
+          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+        />
+
+        {acaoAtiva === "atualizar" && (
+          <select
+            value={statusEscolhido}
+            onChange={(e) => setStatusEscolhido(e.target.value)}
+            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          >
+            <option value="aguardando">Aguardando</option>
+            <option value="em atendimento">Em atendimento</option>
+            <option value="atendido">Atendido</option>
+          </select>
+        )}
+
+        <button
+          disabled={loading}
+          onClick={confirmarAcao}
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
+        >
+          Confirmar
+        </button>
+
+        {loading && <p className="text-gray-500 text-lg text-center">Carregando...</p>}
+        {erro && <p className="text-red-500 text-lg text-center">{erro}</p>}
         {informacoes && !loading && !erro && (
           <div className="text-gray-800 text-lg">
             {exibirInformacoes(informacoes)}
@@ -452,72 +551,14 @@ export default function Medico() {
 
       <button
         onClick={voltarAoMenu}
-        className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors z-10"
+        className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg"
       >
         Voltar ao Menu
       </button>
 
-    </main>
-  );
-}
-
-  return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-6 overflow-hidden relative p-8">
-
-    <div className="absolute top-0 left-0 w-[500px] h-[450px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
-    <div className="absolute bottom-0 right-0 w-[550px] h-[500px] bg-[#dff0f4] rounded-full translate-x-40 translate-y-40"></div>
-
-    <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6 z-10">
-      <h2 className="text-2xl font-bold text-gray-800">
-        {acaoAtiva === "status" && "Buscar Status do Paciente"}
-        {acaoAtiva === "atualizar" && "Atualizar Status do Paciente"}
-        {acaoAtiva === "remover" && "Remover Paciente"}
-      </h2>
-
-      <input
-        type="number"
-        value={idDigitado}
-        onChange={(e) => setIdDigitado(e.target.value)}
-        placeholder="ID do paciente"
-        className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-      />
-
-      {acaoAtiva === "atualizar" && (
-        <select
-          value={statusEscolhido}
-          onChange={(e) => setStatusEscolhido(e.target.value)}
-          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-        >
-          <option value="aguardando">Aguardando</option>
-          <option value="em atendimento">Em atendimento</option>
-          <option value="atendido">Atendido</option>
-        </select>
-      )}
-
-      <button
-        disabled={loading}
-        onClick={confirmarAcao}
-        className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
-      >
-        Confirmar
-      </button>
-
-      {loading && <p className="text-gray-500 text-lg text-center">Carregando...</p>}
-      {erro && <p className="text-red-500 text-lg text-center">{erro}</p>}
-      {informacoes && !loading && !erro && (
-        <div className="text-gray-800 text-lg">
-          {exibirInformacoes(informacoes)}
-        </div>
-      )}
     </div>
 
-    <button
-      onClick={voltarAoMenu}
-      className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors z-10"
-    >
-      Voltar ao Menu
-    </button>
-
   </main>
-  );
+);
+
 }

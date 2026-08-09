@@ -50,7 +50,7 @@ export default function Analisando() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden">
+    <main className="min-h-screen bg-slate-100 flex flex-col items-center justify-center gap-8 overflow-hidden relative">
 
       {/* Círculos decorativos */}
       <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#dff0f4] rounded-full -translate-x-40 -translate-y-40"></div>
