@@ -14,11 +14,12 @@ type PatientOutput = {
   created_at: string;
 };
 
-type MensagemRemocao = {
+type RemovalMessage = {
   mensagem: string;
 };
 
-type DadosMedico = PatientOutput | PatientOutput[] | MensagemRemocao | null;
+// Union type to handle all possible response types from the doctor endpoints
+type DoctorData = PatientOutput | PatientOutput[] | RemovalMessage | null;
 
 type Tokens = {
   access_token: string;
@@ -27,68 +28,75 @@ type Tokens = {
 
 export default function Medico() {
 
-  const [logado, setLogado] = useState(false);
-  const [senhaDigitada, setSenhaDigitada] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [typedPassword, setTypedPassword] = useState("");
   const [tokens, setTokens] = useState<Tokens | null>(null);
-  const [erroLogin, setErroLogin] = useState<string | null>(null);
+  const [loginError, setLoginError] = useState<string | null>(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
-  const [verificandoSessao, setVerificandoSessao] = useState(true);
 
+  // Prevents login screen flash while checking sessionStorage on mount
+  const [checkingSession, setCheckingSession] = useState(true);
 
-  const [acaoAtiva, setAcaoAtiva] = useState<string | null>(null);
-  const [idDigitado, setIdDigitado] = useState("");
-  const [statusEscolhido, setStatusEscolhido] = useState("aguardando");
+  // Controls which action screen is currently shown (null = main menu)
+  const [activeAction, setActiveAction] = useState<string | null>(null);
+  const [typedId, setTypedId] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("aguardando");
 
-  const [informacoes, setInformacoes] = useState<DadosMedico>(null);
+  const [data, setData] = useState<DoctorData>(null);
   const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  // Restores session from sessionStorage on page load
+  // Session expires when the tab is closed (sessionStorage behavior)
   useEffect(() => {
-    const tokensArmazenados = sessionStorage.getItem("medico_tokens");
-    if (tokensArmazenados) {
-      const tokensParsed = JSON.parse(tokensArmazenados);
-      setTokens(tokensParsed);
-      setLogado(true);
+    const storedTokens = sessionStorage.getItem("medico_tokens");
+    if (storedTokens) {
+      const parsedTokens = JSON.parse(storedTokens);
+      setTokens(parsedTokens);
+      setIsLoggedIn(true);
     }
-    setVerificandoSessao(false);
+    setCheckingSession(false);
   }, []);
 
-  async function fazerLogin() {
+  // Authenticates the doctor with the backend and stores JWT tokens in sessionStorage
+  async function handleLogin() {
     setLoadingLogin(true);
-    setErroLogin(null);
+    setLoginError(null);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/doctor/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ senha: senhaDigitada }),
+        body: JSON.stringify({ senha: typedPassword }),
       });
 
       if (!response.ok) {
         throw new Error("Erro ao fazer login. Tente novamente.");
       }
 
-      const dados = await response.json();
+      const responseData = await response.json();
 
-      const tokensParaSalvar: Tokens = {
-        access_token: dados.access_token,
-        refresh_token: dados.refresh_token,
+      const tokensToSave: Tokens = {
+        access_token: responseData.access_token,
+        refresh_token: responseData.refresh_token,
       };
 
-      sessionStorage.setItem("medico_tokens", JSON.stringify(tokensParaSalvar));
-      setTokens(tokensParaSalvar);
-      setLogado(true);
-      setSenhaDigitada("");
+      sessionStorage.setItem("medico_tokens", JSON.stringify(tokensToSave));
+      setTokens(tokensToSave);
+      setIsLoggedIn(true);
+      setTypedPassword("");
       setLoadingLogin(false);
 
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setLoadingLogin(false);
-      setErroLogin("Erro ao fazer login. Tente novamente.");
+      setLoginError("Erro ao fazer login. Tente novamente.");
     }
   }
 
-  async function refrescarToken() {
+  // Uses the refresh token to obtain a new access token when the current one expires (401)
+  // Calls logout() if the refresh token is also invalid
+  async function refreshToken() {
     if (!tokens) return null;
 
     try {
@@ -101,15 +109,15 @@ export default function Medico() {
         throw new Error("Erro ao refrescar tokens");
       }
 
-      const dados = await response.json();
-      const tokensAtualizados: Tokens = {
-        access_token: dados.access_token,
+      const responseData = await response.json();
+      const updatedTokens: Tokens = {
+        access_token: responseData.access_token,
         refresh_token: tokens.refresh_token,
       };
 
-      sessionStorage.setItem("medico_tokens", JSON.stringify(tokensAtualizados));
-      setTokens(tokensAtualizados);
-      return tokensAtualizados;
+      sessionStorage.setItem("medico_tokens", JSON.stringify(updatedTokens));
+      setTokens(updatedTokens);
+      return updatedTokens;
 
     } catch (error) {
       console.error("Erro ao refrescar token:", error);
@@ -118,32 +126,35 @@ export default function Medico() {
     }
   }
 
+  // Clears all session data and returns the doctor to the login screen
   function logout() {
     sessionStorage.removeItem("medico_tokens");
     setTokens(null);
-    setLogado(false);
-    setAcaoAtiva(null);
-    setIdDigitado("");
-    setInformacoes(null);
-    setErro(null);
-    setSenhaDigitada("");
+    setIsLoggedIn(false);
+    setActiveAction(null);
+    setTypedId("");
+    setData(null);
+    setError(null);
+    setTypedPassword("");
   }
 
-  async function buscarComAutenticacao(url: string, options: RequestInit = {}) {
+  // Wrapper around fetch that injects the Authorization header
+  // Automatically attempts token refresh on 401 and retries the request
+  async function fetchWithAuth(url: string, options: RequestInit = {}) {
     if (!tokens) {
       throw new Error("Sem tokens de autenticação");
     }
 
-    const headersComAuth = {
+    const headersWithAuth = {
       ...options.headers,
       "Authorization": `Bearer ${tokens.access_token}`,
     };
 
-    let response = await fetch(url, { ...options, headers: headersComAuth });
+    let response = await fetch(url, { ...options, headers: headersWithAuth });
 
     if (response.status === 401) {
-      const tokensFrescos = await refrescarToken();
-      if (!tokensFrescos) {
+      const freshTokens = await refreshToken();
+      if (!freshTokens) {
         throw new Error("Não foi possível renovar a sessão");
       }
 
@@ -151,7 +162,7 @@ export default function Medico() {
         ...options,
         headers: {
           ...options.headers,
-          "Authorization": `Bearer ${tokensFrescos.access_token}`,
+          "Authorization": `Bearer ${freshTokens.access_token}`,
         },
       });
     }
@@ -159,75 +170,79 @@ export default function Medico() {
     return response;
   }
 
-  async function buscarFilaOrdenada() {
+  // Fetches all patients currently in the queue, ordered by priority
+  async function fetchOrderedQueue() {
     setLoading(true);
-    setErro(null);
+    setError(null);
 
     try {
-      const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/status`);
+      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/status`);
       if (!response.ok) {
         throw new Error("Erro ao buscar dados da fila");
       }
 
-      const dadosFila = await response.json();
-      setInformacoes(dadosFila);
+      const queueData = await response.json();
+      setData(queueData);
       setLoading(false);
 
     } catch (error) {
       console.error("Erro ao buscar dados da fila:", error);
       setLoading(false);
-      setErro("Erro ao buscar dados da fila");
+      setError("Erro ao buscar dados da fila");
     }
   }
 
-  async function buscarProximoPaciente() {
+  // Fetches the next patient to be attended (highest priority in queue)
+  async function fetchNextPatient() {
     setLoading(true);
-    setErro(null);
+    setError(null);
 
     try {
-      const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/next/`);
+      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/next/`);
       if (!response.ok) {
         throw new Error("Erro ao buscar próximo paciente da fila");
       }
 
-      const dadosProximoPaciente = await response.json();
-      setInformacoes(dadosProximoPaciente);
+      const nextPatientData = await response.json();
+      setData(nextPatientData);
       setLoading(false);
 
     } catch (error) {
       console.error("Erro ao buscar próximo paciente da fila:", error);
       setLoading(false);
-      setErro("Erro ao buscar próximo paciente da fila");
+      setError("Erro ao buscar próximo paciente da fila");
     }
   }
 
-  async function pacienteStatus(id: number) {
+  // Fetches the current status and queue info of a specific patient by ID
+  async function fetchPatientStatus(id: number) {
     setLoading(true);
-    setErro(null);
+    setError(null);
 
     try {
-      const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/status/${id}`);
+      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/status/${id}`);
       if (!response.ok) {
         throw new Error("Erro ao buscar status do paciente");
       }
 
-      const dadosStatusPaciente = await response.json();
-      setInformacoes(dadosStatusPaciente);
+      const patientStatusData = await response.json();
+      setData(patientStatusData);
       setLoading(false);
 
     } catch (error) {
       console.error("Erro ao buscar status do paciente:", error);
       setLoading(false);
-      setErro("Erro ao buscar status do paciente");
+      setError("Erro ao buscar status do paciente");
     }
   }
 
-  async function atualizarPacienteStatus(id: number, status: string) {
+  // Updates the attendance status of a patient (aguardando / em atendimento / atendido)
+  async function updatePatientStatus(id: number, status: string) {
     setLoading(true);
-    setErro(null);
+    setError(null);
 
     try {
-      const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/${id}/status`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ new_status: status }),
@@ -237,23 +252,24 @@ export default function Medico() {
         throw new Error("Erro ao atualizar status do paciente");
       }
 
-      const dadosAtualizados = await response.json();
-      setInformacoes(dadosAtualizados);
+      const updatedData = await response.json();
+      setData(updatedData);
       setLoading(false);
 
     } catch (error) {
       console.error("Erro ao atualizar status do paciente:", error);
       setLoading(false);
-      setErro("Erro ao atualizar status do paciente");
+      setError("Erro ao atualizar status do paciente");
     }
   }
 
-  async function removerPaciente(id: number) {
+  // Removes a patient from the queue by ID
+  async function removePatient(id: number) {
     setLoading(true);
-    setErro(null);
+    setError(null);
 
     try {
-      const response = await buscarComAutenticacao(`http://127.0.0.1:8000/queue/${id}`, {
+      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/${id}`, {
         method: "DELETE",
       });
 
@@ -261,31 +277,33 @@ export default function Medico() {
         throw new Error("Erro ao remover paciente");
       }
 
-      const dadosRemovidos = await response.json();
-      setInformacoes(dadosRemovidos);
+      const removedData = await response.json();
+      setData(removedData);
       setLoading(false);
 
     } catch (error) {
       console.error("Erro ao remover paciente:", error);
       setLoading(false);
-      setErro("Erro ao remover paciente");
+      setError("Erro ao remover paciente");
     }
   }
 
-  function exibirInformacoes(dados: DadosMedico) {
-    if (!dados) return <p>Nenhum dado encontrado</p>;
+  // Renders the correct UI based on the type of data received from the backend
+  // Handles: removal message, array of patients, or single patient object
+  function renderInfo(info: DoctorData) {
+    if (!info) return <p>Nenhum dado encontrado</p>;
 
-    if ('mensagem' in dados) {
-      return <p>{dados.mensagem}</p>;
+    if ('mensagem' in info) {
+      return <p>{info.mensagem}</p>;
     }
 
-    if (Array.isArray(dados)) {
-      if (dados.length === 0) return <p>Fila vazia</p>;
+    if (Array.isArray(info)) {
+      if (info.length === 0) return <p>Fila vazia</p>;
       return (
         <ul>
-          {dados.map((paciente) => (
-            <li key={paciente.id}>
-              {paciente.full_name} — {paciente.urgency_level} — status: {paciente.status}
+          {info.map((patient) => (
+            <li key={patient.id}>
+              {patient.full_name} — {patient.urgency_level} — status: {patient.status}
             </li>
           ))}
         </ul>
@@ -294,218 +312,47 @@ export default function Medico() {
 
     return (
       <div>
-        <p>Nome: {dados.full_name}</p>
-        <p>Idade: {dados.age}</p>
-        <p>Urgência: {dados.urgency_level}</p>
-        <p>Status: {dados.status}</p>
+        <p>Nome: {info.full_name}</p>
+        <p>Idade: {info.age}</p>
+        <p>Urgência: {info.urgency_level}</p>
+        <p>Status: {info.status}</p>
       </div>
     );
   }
 
-  const exibicaoResultado = (
+  // Reusable result display — shows loading, error or data depending on current state
+  const resultDisplay = (
     <>
       {loading && <p>Carregando...</p>}
-      {erro && <p>Erro: {erro}</p>}
-      {informacoes && !loading && !erro && exibirInformacoes(informacoes)}
+      {error && <p>Erro: {error}</p>}
+      {data && !loading && !error && renderInfo(data)}
     </>
   );
 
-  function voltarAoMenu() {
-    setAcaoAtiva(null);
-    setIdDigitado("");
-    setInformacoes(null);
-    setErro(null);
+  // Resets all action-related state and returns to the main menu
+  function backToMenu() {
+    setActiveAction(null);
+    setTypedId("");
+    setData(null);
+    setError(null);
   }
 
-  function confirmarAcao() {
-    if (!idDigitado || Number(idDigitado) <= 0) {
-      setErro("Por favor, digite um ID válido");
+  // Validates the typed ID and dispatches the correct action function
+  function confirmAction() {
+    if (!typedId || Number(typedId) <= 0) {
+      setError("Por favor, digite um ID válido");
       return;
     }
 
-    const id = Number(idDigitado);
+    const id = Number(typedId);
 
-    if (acaoAtiva === "status") pacienteStatus(id);
-    else if (acaoAtiva === "atualizar") atualizarPacienteStatus(id, statusEscolhido);
-    else if (acaoAtiva === "remover") removerPaciente(id);
+    if (activeAction === "status") fetchPatientStatus(id);
+    else if (activeAction === "atualizar") updatePatientStatus(id, selectedStatus);
+    else if (activeAction === "remover") removePatient(id);
   }
 
-  if (verificandoSessao) {
-  return null;
-}
-
-if (!logado) {
-  return (
-    <main className="min-h-screen bg-slate-100 flex flex-col">
-
-      {/* Header */}
-      <header className="bg-[#00526d] flex items-center px-10 py-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
-            <span className="text-white font-bold text-5xl">+</span>
-          </div>
-          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
-          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
-            <span className="text-white font-semibold text-lg">Painel Médico</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex flex-col flex-1 items-center justify-center gap-8">
-
-        <div className="border-4 border-[#0087b2] rounded-full p-4">
-          <Hospital size={80} className="text-gray-800" />
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
-          <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
-          <p className="text-lg text-gray-800">Digite a senha para acessar</p>
-
-          <input
-            type="password"
-            value={senhaDigitada}
-            onChange={(e) => setSenhaDigitada(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && fazerLogin()}
-            placeholder="Senha"
-            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-          />
-
-          <button
-            disabled={loadingLogin}
-            onClick={fazerLogin}
-            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
-          >
-            {loadingLogin ? "Entrando..." : "Entrar"}
-          </button>
-
-          {erroLogin && <p className="text-red-500 font-semibold text-lg text-center">{erroLogin}</p>}
-        </div>
-
-      </div>
-
-    </main>
-  );
-}
-
-  if (!acaoAtiva) {
-  return (
-    <main className="min-h-screen bg-slate-100 flex flex-col">
-
-      {/* Header fixo */}
-      <header className="bg-[#00526d] flex items-center px-10 py-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
-            <span className="text-white font-bold text-5xl">+</span>
-          </div>
-          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
-          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
-            <span className="text-white font-semibold text-lg">Painel Médico</span>
-          </div>
-        </div>
-      </header>
-
-      {/* Conteúdo central */}
-      <div className="flex flex-1 items-center justify-center p-10">
-        <div className="bg-[#ebf1f9] rounded-3xl p-10 flex flex-col items-center gap-5 w-full max-w-2xl">
-          <h1 className="text-4xl font-bold text-[#00526d] mb-4 tracking-wide">MENU MÉDICO</h1>
-
-          <button
-            onClick={() => { setAcaoAtiva("fila"); buscarFilaOrdenada(); }}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-          >
-            Buscar Fila Ordenada
-          </button>
-
-          <button
-            onClick={() => { setAcaoAtiva("proximo"); buscarProximoPaciente(); }}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-          >
-            Buscar Próximo Paciente
-          </button>
-
-          <button
-            onClick={() => setAcaoAtiva("status")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-          >
-            Buscar Status Paciente
-          </button>
-
-          <button
-            onClick={() => setAcaoAtiva("atualizar")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-          >
-            Atualizar Status Paciente
-          </button>
-
-          <button
-            onClick={() => setAcaoAtiva("remover")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-          >
-            Remover Paciente
-          </button>
-
-          <button
-            onClick={logout}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-5 rounded-full text-2xl transition-colors border-3 border-red-900 w-full mt-2"
-          >
-            LOGOUT
-          </button>
-
-        </div>
-      </div>
-
-    </main>
-  );
-}
-
-  if (acaoAtiva === "fila" || acaoAtiva === "proximo") {
-  return (
-    <main className="min-h-screen bg-slate-100 flex flex-col">
-
-      {/* Header */}
-      <header className="bg-[#00526d] flex items-center px-10 py-6">
-        <div className="flex items-center gap-4">
-          <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
-            <span className="text-white font-bold text-5xl">+</span>
-          </div>
-          <span className="text-white font-bold text-3xl">Triagem<span className="text-[#00c2e0]">IA</span></span>
-          <div className="bg-[#009bb6] rounded-full px-7 py-2 ml-2">
-            <span className="text-white font-semibold text-lg">Painel Médico</span>
-          </div>
-        </div>
-      </header>
-
-      <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
-        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            {acaoAtiva === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
-          </h2>
-
-          {loading && <p className="text-gray-500 text-lg">Carregando...</p>}
-          {erro && <p className="text-red-500 text-lg">{erro}</p>}
-          {informacoes && !loading && !erro && (
-            <div className="text-gray-800 text-lg">
-              {exibirInformacoes(informacoes)}
-            </div>
-          )}
-        </div>
-
-        <button
-          onClick={voltarAoMenu}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors"
-        >
-          Voltar ao Menu
-        </button>
-      </div>
-
-    </main>
-  );
-}
-
-  return (
-  <main className="min-h-screen bg-slate-100 flex flex-col">
-
-    {/* Header */}
+  // Reusable header component rendered across all doctor panel screens
+  const panelHeader = (
     <header className="bg-[#00526d] flex items-center px-10 py-6">
       <div className="flex items-center gap-4">
         <div className="bg-[#0087b2] rounded-full w-12 h-12 flex items-center justify-center">
@@ -517,63 +364,196 @@ if (!logado) {
         </div>
       </div>
     </header>
+  );
 
-    <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
+  // Renders blank screen while checking sessionStorage to avoid login flash
+  if (checkingSession) return null;
 
-      <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
-        <h2 className="text-2xl font-bold text-gray-800">
-          {acaoAtiva === "status" && "Buscar Status do Paciente"}
-          {acaoAtiva === "atualizar" && "Atualizar Status do Paciente"}
-          {acaoAtiva === "remover" && "Remover Paciente"}
-        </h2>
+  // Login screen — shown when no valid session is found in sessionStorage
+  if (!isLoggedIn) {
+    return (
+      <main className="min-h-screen bg-slate-100 flex flex-col">
+        {panelHeader}
 
-        <input
-          type="number"
-          value={idDigitado}
-          onChange={(e) => setIdDigitado(e.target.value)}
-          placeholder="ID do paciente"
-          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-        />
+        <div className="flex flex-col flex-1 items-center justify-center gap-8">
 
-        {acaoAtiva === "atualizar" && (
-          <select
-            value={statusEscolhido}
-            onChange={(e) => setStatusEscolhido(e.target.value)}
-            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          <div className="border-4 border-[#0087b2] rounded-full p-4">
+            <Hospital size={80} className="text-gray-800" />
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
+            <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
+            <p className="text-lg text-gray-800">Digite a senha para acessar</p>
+
+            {/* Password input — also submits on Enter key */}
+            <input
+              type="password"
+              value={typedPassword}
+              onChange={(e) => setTypedPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+              placeholder="Senha"
+              className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+            />
+
+            <button
+              disabled={loadingLogin}
+              onClick={handleLogin}
+              className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+            >
+              {loadingLogin ? "Entrando..." : "Entrar"}
+            </button>
+
+            {loginError && <p className="text-red-500 font-semibold text-lg text-center">{loginError}</p>}
+          </div>
+
+        </div>
+      </main>
+    );
+  }
+
+  // Main menu screen — shown after successful login
+  if (!activeAction) {
+    return (
+      <main className="min-h-screen bg-slate-100 flex flex-col">
+        {panelHeader}
+
+        <div className="flex flex-1 items-center justify-center p-10">
+          <div className="bg-[#ebf1f9] rounded-3xl p-10 flex flex-col items-center gap-5 w-full max-w-2xl">
+            <h1 className="text-4xl font-bold text-[#00526d] mb-4 tracking-wide">MENU MÉDICO</h1>
+
+            {/* Actions that fetch data immediately without requiring an ID */}
+            <button
+              onClick={() => { setActiveAction("fila"); fetchOrderedQueue(); }}
+              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            >
+              Buscar Fila Ordenada
+            </button>
+
+            <button
+              onClick={() => { setActiveAction("proximo"); fetchNextPatient(); }}
+              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            >
+              Buscar Próximo Paciente
+            </button>
+
+            {/* Actions that require a patient ID — navigate to input screen */}
+            <button
+              onClick={() => setActiveAction("status")}
+              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            >
+              Buscar Status Paciente
+            </button>
+
+            <button
+              onClick={() => setActiveAction("atualizar")}
+              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            >
+              Atualizar Status Paciente
+            </button>
+
+            <button
+              onClick={() => setActiveAction("remover")}
+              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            >
+              Remover Paciente
+            </button>
+
+            <button
+              onClick={logout}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-5 rounded-full text-2xl transition-colors border-3 border-red-900 w-full mt-2"
+            >
+              LOGOUT
+            </button>
+
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Result screen — shown for actions that don't require input (queue / next patient)
+  if (activeAction === "fila" || activeAction === "proximo") {
+    return (
+      <main className="min-h-screen bg-slate-100 flex flex-col">
+        {panelHeader}
+
+        <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              {activeAction === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
+            </h2>
+            <div className="text-gray-800 text-lg">
+              {resultDisplay}
+            </div>
+          </div>
+
+          <button
+            onClick={backToMenu}
+            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors"
           >
-            <option value="aguardando">Aguardando</option>
-            <option value="em atendimento">Em atendimento</option>
-            <option value="atendido">Atendido</option>
-          </select>
-        )}
+            Voltar ao Menu
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // Input screen — shown for actions that require a patient ID (status / update / remove)
+  return (
+    <main className="min-h-screen bg-slate-100 flex flex-col">
+      {panelHeader}
+
+      <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
+
+        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            {activeAction === "status" && "Buscar Status do Paciente"}
+            {activeAction === "atualizar" && "Atualizar Status do Paciente"}
+            {activeAction === "remover" && "Remover Paciente"}
+          </h2>
+
+          <input
+            type="number"
+            value={typedId}
+            onChange={(e) => setTypedId(e.target.value)}
+            placeholder="ID do paciente"
+            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          />
+
+          {/* Status selector — only shown for the update action */}
+          {activeAction === "atualizar" && (
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+            >
+              <option value="aguardando">Aguardando</option>
+              <option value="em atendimento">Em atendimento</option>
+              <option value="atendido">Atendido</option>
+            </select>
+          )}
+
+          <button
+            disabled={loading}
+            onClick={confirmAction}
+            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
+          >
+            Confirmar
+          </button>
+
+          <div className="text-gray-800 text-lg">
+            {resultDisplay}
+          </div>
+        </div>
 
         <button
-          disabled={loading}
-          onClick={confirmarAcao}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
+          onClick={backToMenu}
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg"
         >
-          Confirmar
+          Voltar ao Menu
         </button>
 
-        {loading && <p className="text-gray-500 text-lg text-center">Carregando...</p>}
-        {erro && <p className="text-red-500 text-lg text-center">{erro}</p>}
-        {informacoes && !loading && !erro && (
-          <div className="text-gray-800 text-lg">
-            {exibirInformacoes(informacoes)}
-          </div>
-        )}
       </div>
-
-      <button
-        onClick={voltarAoMenu}
-        className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg"
-      >
-        Voltar ao Menu
-      </button>
-
-    </div>
-
-  </main>
-);
-
+    </main>
+  );
 }
