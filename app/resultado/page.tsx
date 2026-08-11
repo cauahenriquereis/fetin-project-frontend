@@ -170,7 +170,7 @@ export default function Resultado() {
 
           {/* Symptoms pill */}
           <div className="bg-white border-3 border-gray-400 rounded-full px-10 py-2">
-            <p className="text-gray-600 text-lg">{patientInfo.patient.symptoms}</p>
+            <p className="text-gray-600 font-bold text-lg">{patientInfo.patient.symptoms}</p>
           </div>
         </div>
 
