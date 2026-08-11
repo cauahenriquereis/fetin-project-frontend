@@ -1,5 +1,3 @@
-// Home page — entry point of the triage system
-// Displays welcome message and button to start the triage process
 import Link from "next/link";
 import { Hospital } from "lucide-react";
 

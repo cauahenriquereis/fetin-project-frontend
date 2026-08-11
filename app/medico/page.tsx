@@ -303,7 +303,7 @@ export default function Medico() {
         <ul>
           {info.map((patient) => (
             <li key={patient.id}>
-              {patient.full_name} — {patient.urgency_level} — status: {patient.status}
+              id: {patient.id} — {patient.full_name} — {patient.urgency_level} — status: {patient.status}
             </li>
           ))}
         </ul>
@@ -312,6 +312,7 @@ export default function Medico() {
 
     return (
       <div>
+        <p>id: {info.id}</p>
         <p>Nome: {info.full_name}</p>
         <p>Idade: {info.age}</p>
         <p>Urgência: {info.urgency_level}</p>
@@ -371,176 +372,99 @@ export default function Medico() {
 
   // Login screen — shown when no valid session is found in sessionStorage
   if (!isLoggedIn) {
-    return (
-      <main className="min-h-screen bg-slate-100 flex flex-col">
-        {panelHeader}
-
-        <div className="flex flex-col flex-1 items-center justify-center gap-8">
-
-          <div className="border-4 border-[#0087b2] rounded-full p-4">
-            <Hospital size={80} className="text-gray-800" />
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
-            <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
-            <p className="text-lg text-gray-800">Digite a senha para acessar</p>
-
-            {/* Password input — also submits on Enter key */}
-            <input
-              type="password"
-              value={typedPassword}
-              onChange={(e) => setTypedPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              placeholder="Senha"
-              className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-            />
-
-            <button
-              disabled={loadingLogin}
-              onClick={handleLogin}
-              className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
-            >
-              {loadingLogin ? "Entrando..." : "Entrar"}
-            </button>
-
-            {loginError && <p className="text-red-500 font-semibold text-lg text-center">{loginError}</p>}
-          </div>
-
+  return (
+    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+      {panelHeader}
+      <div className="flex flex-col flex-1 items-center justify-center gap-8">
+        <div className="border-4 border-[#0087b2] rounded-full p-4">
+          <Hospital size={80} className="text-gray-800" />
         </div>
-      </main>
-    );
-  }
+        <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
+          <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
+          <p className="text-lg text-gray-800">Digite a senha para acessar</p>
+          <input
+            type="password"
+            value={typedPassword}
+            onChange={(e) => setTypedPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            placeholder="Senha"
+            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          />
+          <button
+            disabled={loadingLogin}
+            onClick={handleLogin}
+            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+          >
+            {loadingLogin ? "Entrando..." : "Entrar"}
+          </button>
+          {loginError && <p className="text-red-500 font-semibold text-lg text-center">{loginError}</p>}
+        </div>
+      </div>
+    </main>
+  );
+}
 
   // Main menu screen — shown after successful login
-  if (!activeAction) {
-    return (
-      <main className="min-h-screen bg-slate-100 flex flex-col">
-        {panelHeader}
-
-        <div className="flex flex-1 items-center justify-center p-10">
-          <div className="bg-[#ebf1f9] rounded-3xl p-10 flex flex-col items-center gap-5 w-full max-w-2xl">
-            <h1 className="text-4xl font-bold text-[#00526d] mb-4 tracking-wide">MENU MÉDICO</h1>
-
-            {/* Actions that fetch data immediately without requiring an ID */}
-            <button
-              onClick={() => { setActiveAction("fila"); fetchOrderedQueue(); }}
-              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-            >
-              Buscar Fila Ordenada
-            </button>
-
-            <button
-              onClick={() => { setActiveAction("proximo"); fetchNextPatient(); }}
-              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-            >
-              Buscar Próximo Paciente
-            </button>
-
-            {/* Actions that require a patient ID — navigate to input screen */}
-            <button
-              onClick={() => setActiveAction("status")}
-              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-            >
-              Buscar Status Paciente
-            </button>
-
-            <button
-              onClick={() => setActiveAction("atualizar")}
-              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-            >
-              Atualizar Status Paciente
-            </button>
-
-            <button
-              onClick={() => setActiveAction("remover")}
-              className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-5 rounded-full text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
-            >
-              Remover Paciente
-            </button>
-
-            <button
-              onClick={logout}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-5 rounded-full text-2xl transition-colors border-3 border-red-900 w-full mt-2"
-            >
-              LOGOUT
-            </button>
-
-          </div>
+ if (!activeAction) {
+  return (
+    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+      {panelHeader}
+      <div className="flex flex-1 items-center justify-center p-6 lg:p-10">
+        <div className="bg-[#ebf1f9] rounded-3xl p-6 lg:p-10 flex flex-col items-center gap-3 lg:gap-5 w-full max-w-2xl">
+          <h1 className="text-2xl lg:text-4xl font-bold text-[#00526d] mb-2 lg:mb-4 tracking-wide">MENU MÉDICO</h1>
+          <button
+            onClick={() => { setActiveAction("fila"); fetchOrderedQueue(); }}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Fila Ordenada
+          </button>
+          <button
+            onClick={() => { setActiveAction("proximo"); fetchNextPatient(); }}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Próximo Paciente
+          </button>
+          <button
+            onClick={() => setActiveAction("status")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Buscar Status Paciente
+          </button>
+          <button
+            onClick={() => setActiveAction("atualizar")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Atualizar Status Paciente
+          </button>
+          <button
+            onClick={() => setActiveAction("remover")}
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+          >
+            Remover Paciente
+          </button>
+          <button
+            onClick={logout}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors border-3 border-red-900 w-full mt-2"
+          >
+            LOGOUT
+          </button>
         </div>
-      </main>
-    );
-  }
+      </div>
+    </main>
+  );
+}
 
   // Result screen — shown for actions that don't require input (queue / next patient)
   if (activeAction === "fila" || activeAction === "proximo") {
-    return (
-      <main className="min-h-screen bg-slate-100 flex flex-col">
-        {panelHeader}
-
-        <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
-          <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              {activeAction === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
-            </h2>
-            <div className="text-gray-800 text-lg">
-              {resultDisplay}
-            </div>
-          </div>
-
-          <button
-            onClick={backToMenu}
-            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors"
-          >
-            Voltar ao Menu
-          </button>
-        </div>
-      </main>
-    );
-  }
-
-  // Input screen — shown for actions that require a patient ID (status / update / remove)
   return (
-    <main className="min-h-screen bg-slate-100 flex flex-col">
+    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
       {panelHeader}
+      <div className="flex flex-col flex-1 items-center justify-between p-8">
 
-      <div className="flex flex-col flex-1 items-center justify-center gap-6 p-8">
-
-        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
-          <h2 className="text-2xl font-bold text-gray-800">
-            {activeAction === "status" && "Buscar Status do Paciente"}
-            {activeAction === "atualizar" && "Atualizar Status do Paciente"}
-            {activeAction === "remover" && "Remover Paciente"}
+        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl overflow-y-auto max-h-[70vh]">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {activeAction === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
           </h2>
-
-          <input
-            type="number"
-            value={typedId}
-            onChange={(e) => setTypedId(e.target.value)}
-            placeholder="ID do paciente"
-            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-          />
-
-          {/* Status selector — only shown for the update action */}
-          {activeAction === "atualizar" && (
-            <select
-              value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
-            >
-              <option value="aguardando">Aguardando</option>
-              <option value="em atendimento">Em atendimento</option>
-              <option value="atendido">Atendido</option>
-            </select>
-          )}
-
-          <button
-            disabled={loading}
-            onClick={confirmAction}
-            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
-          >
-            Confirmar
-          </button>
-
           <div className="text-gray-800 text-lg">
             {resultDisplay}
           </div>
@@ -548,7 +472,7 @@ export default function Medico() {
 
         <button
           onClick={backToMenu}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg"
+          className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg mt-6"
         >
           Voltar ao Menu
         </button>
@@ -556,4 +480,55 @@ export default function Medico() {
       </div>
     </main>
   );
+}
+
+  // Input screen — shown for actions that require a patient ID (status / update / remove)
+  return (
+  <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+    {panelHeader}
+    <div className="flex flex-col flex-1 items-center justify-between p-8">
+      <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
+        <h2 className="text-2xl font-bold text-gray-800">
+          {activeAction === "status" && "Buscar Status do Paciente"}
+          {activeAction === "atualizar" && "Atualizar Status do Paciente"}
+          {activeAction === "remover" && "Remover Paciente"}
+        </h2>
+        <input
+          type="number"
+          value={typedId}
+          onChange={(e) => setTypedId(e.target.value)}
+          placeholder="ID do paciente"
+          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+        />
+        {activeAction === "atualizar" && (
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          >
+            <option value="aguardando">Aguardando</option>
+            <option value="em atendimento">Em atendimento</option>
+            <option value="atendido">Atendido</option>
+          </select>
+        )}
+        <button
+          disabled={loading}
+          onClick={confirmAction}
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
+        >
+          Confirmar
+        </button>
+        <div className="text-gray-800 text-lg">
+          {resultDisplay}
+        </div>
+      </div>
+      <button
+        onClick={backToMenu}
+        className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg mt-6"
+      >
+        Voltar ao Menu
+      </button>
+    </div>
+  </main>
+);
 }
