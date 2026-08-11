@@ -33,7 +33,7 @@ export default function Home() {
       {/* Instructions */}
       <div className="flex flex-col items-center gap-1">
         <p className="text-2xl text-gray-800 text-center">Para iniciar, toque no botão abaixo.</p>
-        <p className="text-2xl text-gray-800 text-center">Após o preenchimento das informações, você receberá sua posição na fila.</p>
+        <p className="text-2xl text-gray-800 text-center">Após o preenchimento das informações, você receberá sua senha.</p>
       </div>
 
       {/* Start triage button — navigates to the patient form */}

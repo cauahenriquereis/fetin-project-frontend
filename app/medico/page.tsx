@@ -303,7 +303,7 @@ export default function Medico() {
         <ul>
           {info.map((patient) => (
             <li key={patient.id}>
-              id: {patient.id} — {patient.full_name} — {patient.urgency_level} — status: {patient.status}
+              ID: {patient.id} — {patient.full_name} — {patient.urgency_level} — status: {patient.status}
             </li>
           ))}
         </ul>
@@ -312,7 +312,7 @@ export default function Medico() {
 
     return (
       <div>
-        <p>id: {info.id}</p>
+        <p>ID: {info.id}</p>
         <p>Nome: {info.full_name}</p>
         <p>Idade: {info.age}</p>
         <p>Urgência: {info.urgency_level}</p>

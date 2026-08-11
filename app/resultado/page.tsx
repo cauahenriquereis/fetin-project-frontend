@@ -18,6 +18,7 @@ type PatientQueueInfo = {
   };
   queue_position: number;
   waiting_time_minutes: number;
+  priority_number: number;
 }
 
 export default function Resultado() {
@@ -179,23 +180,34 @@ export default function Resultado() {
         {/* Right column — wait time and queue position */}
         <div className={`flex flex-col items-center justify-center gap-10 p-16 ${config.rightBackground}`}>
 
+
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-gray-600 font-bold font-boldtext-sm tracking-widest uppercase">Senha</p>
+            <div className="border-6 border-gray-300 rounded-2xl px-16 py-8 bg-blue-50">
+              <p className="text-7xl font-black text-gray-800">{patientInfo.priority_number}</p>
+            </div>
+          </div>
+
+
           {/* Estimated wait time — primary info */}
           <div className="flex flex-col items-center gap-2">
-            <p className="text-gray-600 text-sm tracking-widest uppercase">Tempo estimado de espera</p>
-            <div className="border-2 border-blue-100 rounded-2xl px-16 py-8 bg-blue-50">
-              <p className="text-7xl font-black text-gray-800">~ {patientInfo.waiting_time_minutes} min</p>
+            <p className="text-gray-600 font-bold text-sm tracking-widest uppercase">Tempo estimado de espera</p>
+            <div className="border-6 border-gray-300 rounded-2xl px-10 py-4 bg-blue-50">
+              <p className="text-4xl font-black text-gray-800">~ {patientInfo.waiting_time_minutes} min</p>
             </div>
           </div>
 
           {/* Queue position — secondary info */}
           <div className="flex flex-col items-center gap-1">
-            <p className="text-gray-600 text-sm tracking-widest uppercase">Posição na fila</p>
-            <p className="text-4xl font-black text-gray-800">#{patientInfo.queue_position}</p>
+            <p className="text-gray-600 font-bold text-sm tracking-widest uppercase">Posição na fila</p>
+            <div className="border-6 border-gray-300 rounded-2xl px-6 py-2 bg-blue-50">
+              <p className="text-4xl font-black text-gray-800">#{patientInfo.queue_position}</p>
+            </div>
           </div>
 
           {/* Stay in waiting room notice */}
           <div className="bg-white border-6 border-gray-300 rounded-2xl px-8 py-6 max-w-lg text-center">
-            <p className="text-gray-500 text-lg">Sente-se e aguarde ser chamado pelo nome.</p>
+            <p className="text-gray-500 text-lg">Sente-se e aguarde ser chamado pela senha.</p>
             <p className="text-gray-800 font-bold text-lg mt-1">Por favor, não saia da recepção.</p>
           </div>
 
