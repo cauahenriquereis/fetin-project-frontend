@@ -2,6 +2,25 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {z} from "zod";
+
+const emailSchema = z.object({
+  email: z.string().email("Por favor, informe um email válido."),
+})
+
+
+function validateEmail(email: string): boolean {
+  try {
+    emailSchema.parse({ email }); 
+    return true;
+  }
+  catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error("Erro de validação de email:");
+    } 
+  return false;
+ }
+}
 
 export default function Formulario() {
 
@@ -34,6 +53,12 @@ export default function Formulario() {
       setError("Por favor, preencha o nome completo.");
       return false;
     }
+
+    if(validateEmail(email) === false) {
+      setError("Por favor, informe um e-mail válido.");
+      return false;
+    }
+
     if (Number(age) <= 0) {
       setError("Por favor, informe uma idade válida.");
       return false;
