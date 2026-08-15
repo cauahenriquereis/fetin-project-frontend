@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {z} from "zod";
 
 const emailSchema = z.object({
-  email: z.string().email("Por favor, informe um email válido."),
+  email: z.string().email("Por favor, informe um e-mail válido."),
 })
 
 
@@ -16,7 +16,7 @@ function validateEmail(email: string): boolean {
   }
   catch (error) {
     if (error instanceof z.ZodError) {
-      console.error("Erro de validação de email:");
+      console.error("Erro de validação de e-mail:");
     } 
   return false;
  }
@@ -54,7 +54,7 @@ export default function Formulario() {
       return false;
     }
 
-    if(validateEmail(email) === false) {
+    if(email.trim() !== "" && validateEmail(email) === false) {
       setError("Por favor, informe um e-mail válido.");
       return false;
     }
@@ -112,7 +112,7 @@ return (
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_3px_1fr] flex-1 min-h-0">
 
         {/* Left column — personal data and symptoms */}
-        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 gap-8 lg:gap-4 h-full">
+        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 gap-8 lg:gap-1 h-full">
 
           {/* Personal data section */}
           <div className="flex flex-col gap-3 xl:gap-6">
@@ -130,7 +130,7 @@ return (
             </div>
 
             <div className="flex flex-col gap-1 xl:gap-2">
-              <label className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">Email:</label>
+              <label className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">E-mail:</label>
               <input
                 type="email"
                 value={email}
@@ -191,7 +191,7 @@ return (
         <div className="block lg:hidden h-[3px] bg-[#00526e] mx-6"></div>
 
         {/* Right column — pain level, submit and warning */}
-        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 h-full gap-8 lg:gap-4">
+        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 h-full gap-8 lg:gap-6">
 
         {/* Pain level section */}
           <div className="flex flex-col gap-4 lg:gap-8">

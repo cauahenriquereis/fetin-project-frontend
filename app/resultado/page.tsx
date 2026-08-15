@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, AlertCircle, CheckCircle } from "lucide-react";
+import { API_URL } from "@/config/api";
 
 type PatientQueueInfo = {
   patient: {
@@ -49,7 +50,7 @@ export default function Resultado() {
       setError(null);
 
       try {
-        const response = await fetch(`http://127.0.0.1:8000/patients/${id}`);
+        const response = await fetch(`${API_URL}/patients/${id}`);
 
         if (!response.ok) {
           throw new Error("Erro ao buscar dados do paciente");

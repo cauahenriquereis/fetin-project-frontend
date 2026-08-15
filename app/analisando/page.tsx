@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
+import { API_URL } from "@/config/api";
 
 export default function Analisando() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Analisando() {
       const triageData = JSON.parse(savedData);
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/patients/register", {
+        const response = await fetch(`${API_URL}/patients/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

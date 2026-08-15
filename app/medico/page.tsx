@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Hospital } from "lucide-react";
+import { API_URL } from "@/config/api";
 
 type PatientOutput = {
   id: number;
@@ -64,7 +65,7 @@ export default function Medico() {
     setLoginError(null);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/doctor/login", {
+      const response = await fetch(`${API_URL}/doctor/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ senha: typedPassword }),
@@ -100,7 +101,7 @@ export default function Medico() {
     if (!tokens) return null;
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/doctor/refresh", {
+      const response = await fetch(`${API_URL}/doctor/refresh`, {
         method: "GET",
         headers: { "Authorization": `Bearer ${tokens.refresh_token}` },
       });
@@ -176,7 +177,7 @@ export default function Medico() {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/status`);
+      const response = await fetchWithAuth(`${API_URL}/queue/status`);
       if (!response.ok) {
         throw new Error("Erro ao buscar dados da fila");
       }
@@ -198,7 +199,7 @@ export default function Medico() {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/next/`);
+      const response = await fetchWithAuth(`${API_URL}/queue/next/`);
       if (!response.ok) {
         throw new Error("Erro ao buscar próximo paciente da fila");
       }
@@ -220,7 +221,7 @@ export default function Medico() {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/status/${id}`);
+      const response = await fetchWithAuth(`${API_URL}/queue/status/${id}`);
       if (!response.ok) {
         throw new Error("Erro ao buscar status do paciente");
       }
@@ -242,7 +243,7 @@ export default function Medico() {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/${id}/status`, {
+      const response = await fetchWithAuth(`${API_URL}/queue/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ new_status: status }),
@@ -269,7 +270,7 @@ export default function Medico() {
     setError(null);
 
     try {
-      const response = await fetchWithAuth(`http://127.0.0.1:8000/queue/${id}`, {
+      const response = await fetchWithAuth(`${API_URL}/queue/${id}`, {
         method: "DELETE",
       });
 
@@ -410,7 +411,7 @@ export default function Medico() {
     <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
       {panelHeader}
       <div className="flex flex-1 items-center justify-center p-6 lg:p-10">
-        <div className="bg-[#ebf1f9] rounded-3xl p-6 lg:p-10 flex flex-col items-center gap-3 lg:gap-5 w-full max-w-2xl">
+        <div className="bg-[#ebf1f9] rounded-3xl p-6 lg:p-10 flex flex-col items-center gap-3 lg:gap-4s w-full max-w-2xl">
           <h1 className="text-2xl lg:text-4xl font-bold text-[#00526d] mb-2 lg:mb-4 tracking-wide">MENU MÉDICO</h1>
           <button
             onClick={() => { setActiveAction("fila"); fetchOrderedQueue(); }}
