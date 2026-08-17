@@ -145,83 +145,81 @@ function ResultadoContent() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col overflow-hidden">
+  <main className="min-h-screen flex flex-col overflow-hidden">
 
-      {/* Dynamic header bar — color and icon change based on urgency level */}
-      <div className={`flex items-center gap-4 px-8 py-4 ${config.headerColor}`}>
-        <div className={`border-2 border-white rounded-lg px-20 py-1 flex items-center gap-2 ${config.badgeColor}`}>
-          {config.headerIcon}
-          <span className="text-white font-bold text-xl">{patientInfo.patient.urgency_level.toUpperCase()}</span>
+    {/* Dynamic header bar — color and icon change based on urgency level */}
+    <div className={`flex flex-col sm:flex-row items-center gap-2 sm:gap-4 px-4 sm:px-8 py-3 sm:py-4 ${config.headerColor}`}>
+      <div className={`border-2 border-white rounded-lg px-8 sm:px-14 lg:px-20 py-1 flex items-center gap-2 ${config.badgeColor}`}>
+        {config.headerIcon}
+        <span className="text-white font-bold text-base sm:text-lg lg:text-xl">{patientInfo.patient.urgency_level.toUpperCase()}</span>
+      </div>
+      <p className="text-white font-semibold text-sm sm:text-lg lg:text-xl text-center">
+        Triagem concluída para {patientInfo.patient.full_name}, {patientInfo.patient.age} anos
+      </p>
+    </div>
+
+    {/* Main content — two columns on desktop, stacked on mobile */}
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1px_1fr] flex-1">
+
+      {/* Left column — urgency level and symptoms */}
+      <div className={`flex flex-col items-center justify-center gap-4 sm:gap-6 lg:gap-8 p-6 sm:p-10 lg:p-16 ${config.leftBackground}`}>
+        <p className={`font-bold text-base sm:text-lg lg:text-xl tracking-widest ${config.textColor}`}>NÍVEL DE URGÊNCIA</p>
+
+        <div className={`w-20 h-20 sm:w-28 sm:h-28 lg:w-36 lg:h-36 rounded-full flex items-center justify-center ${config.iconBackground}`}>
+          {config.icon}
         </div>
-        <p className="text-white font-semibold text-xl">
-          Triagem concluída para {patientInfo.patient.full_name}, {patientInfo.patient.age} anos
+
+        <p className={`text-3xl sm:text-4xl lg:text-6xl font-bold ${config.textColor}`}>
+          {patientInfo.patient.urgency_level.charAt(0).toUpperCase() + patientInfo.patient.urgency_level.slice(1)}
         </p>
+
+        {/* Symptoms pill */}
+        <div className="bg-white border-3 border-gray-400 rounded-full px-5 sm:px-7 lg:px-10 py-2 max-w-full">
+          <p className="text-gray-600 font-bold text-sm sm:text-base lg:text-lg text-center break-words">{patientInfo.patient.symptoms}</p>
+        </div>
       </div>
 
-      {/* Main content — two columns */}
-      <div className="grid grid-cols-[1fr_1px_1fr] flex-1">
+      {/* Vertical divider — hidden on mobile since columns stack */}
+      <div className="hidden lg:block bg-gray-200"></div>
 
-        {/* Left column — urgency level and symptoms */}
-        <div className={`flex flex-col items-center justify-center gap-8 p-16 ${config.leftBackground}`}>
-          <p className={`font-bold text-xl tracking-widest ${config.textColor}`}>NÍVEL DE URGÊNCIA</p>
+      {/* Right column — wait time and queue position */}
+      <div className={`flex flex-col items-center justify-center gap-5 sm:gap-7 lg:gap-10 p-6 sm:p-10 lg:p-16 ${config.rightBackground}`}>
 
-          <div className={`w-36 h-36 rounded-full flex items-center justify-center ${config.iconBackground}`}>
-            {config.icon}
-          </div>
-
-          <p className={`text-6xl font-bold ${config.textColor}`}>
-            {patientInfo.patient.urgency_level.charAt(0).toUpperCase() + patientInfo.patient.urgency_level.slice(1)}
-          </p>
-
-          {/* Symptoms pill */}
-          <div className="bg-white border-3 border-gray-400 rounded-full px-10 py-2">
-            <p className="text-gray-600 font-bold text-lg">{patientInfo.patient.symptoms}</p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-gray-600 font-bold text-xs sm:text-sm tracking-widest uppercase">Senha</p>
+          <div className="border-4 sm:border-6 border-gray-300 rounded-2xl px-8 sm:px-12 lg:px-16 py-4 sm:py-6 lg:py-8 bg-blue-50">
+            <p className="text-4xl sm:text-5xl lg:text-7xl font-black text-gray-800">{patientInfo.priority_number}</p>
           </div>
         </div>
 
-        {/* Vertical divider */}
-        <div className="bg-gray-200"></div>
-
-        {/* Right column — wait time and queue position */}
-        <div className={`flex flex-col items-center justify-center gap-10 p-16 ${config.rightBackground}`}>
-
-
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-gray-600 font-bold font-boldtext-sm tracking-widest uppercase">Senha</p>
-            <div className="border-6 border-gray-300 rounded-2xl px-16 py-8 bg-blue-50">
-              <p className="text-7xl font-black text-gray-800">{patientInfo.priority_number}</p>
-            </div>
+        {/* Estimated wait time — primary info */}
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-gray-600 font-bold text-xs sm:text-sm tracking-widest uppercase">Tempo estimado de espera</p>
+          <div className="border-4 sm:border-6 border-gray-300 rounded-2xl px-6 sm:px-8 lg:px-10 py-3 sm:py-4 bg-blue-50">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-800">~ {patientInfo.waiting_time_minutes} min</p>
           </div>
+        </div>
 
-
-          {/* Estimated wait time — primary info */}
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-gray-600 font-bold text-sm tracking-widest uppercase">Tempo estimado de espera</p>
-            <div className="border-6 border-gray-300 rounded-2xl px-10 py-4 bg-blue-50">
-              <p className="text-4xl font-black text-gray-800">~ {patientInfo.waiting_time_minutes} min</p>
-            </div>
+        {/* Queue position — secondary info */}
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-gray-600 font-bold text-xs sm:text-sm tracking-widest uppercase">Posição na fila</p>
+          <div className="border-4 sm:border-6 border-gray-300 rounded-2xl px-4 sm:px-5 lg:px-6 py-2 bg-blue-50">
+            <p className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-800">#{patientInfo.queue_position}</p>
           </div>
+        </div>
 
-          {/* Queue position — secondary info */}
-          <div className="flex flex-col items-center gap-1">
-            <p className="text-gray-600 font-bold text-sm tracking-widest uppercase">Posição na fila</p>
-            <div className="border-6 border-gray-300 rounded-2xl px-6 py-2 bg-blue-50">
-              <p className="text-4xl font-black text-gray-800">#{patientInfo.queue_position}</p>
-            </div>
-          </div>
-
-          {/* Stay in waiting room notice */}
-          <div className="bg-white border-6 border-gray-300 rounded-2xl px-8 py-6 max-w-lg text-center">
-            <p className="text-gray-500 text-lg">Sente-se e aguarde ser chamado pela senha.</p>
-            <p className="text-gray-800 font-bold text-lg mt-1">Por favor, não saia da recepção.</p>
-          </div>
-
+        {/* Stay in waiting room notice */}
+        <div className="bg-white border-4 sm:border-6 border-gray-300 rounded-2xl px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 max-w-xs sm:max-w-sm lg:max-w-lg text-center">
+          <p className="text-gray-500 text-sm sm:text-base lg:text-lg">Sente-se e aguarde ser chamado pela senha.</p>
+          <p className="text-gray-800 font-bold text-sm sm:text-base lg:text-lg mt-1">Por favor, não saia da recepção.</p>
         </div>
 
       </div>
 
-    </main>
-  );
+    </div>
+
+  </main>
+);
 }
 
 export default function Resultado() {
