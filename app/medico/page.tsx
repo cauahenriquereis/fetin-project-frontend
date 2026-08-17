@@ -374,78 +374,79 @@ export default function Medico() {
   // Login screen — shown when no valid session is found in sessionStorage
   if (!isLoggedIn) {
   return (
-    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
       {panelHeader}
-      <div className="flex flex-col flex-1 items-center justify-center gap-8">
-        <div className="border-4 border-[#0087b2] rounded-full p-4">
-          <Hospital size={80} className="text-gray-800" />
+      <div className="flex flex-col flex-1 items-center justify-center gap-5 sm:gap-6 lg:gap-8 px-4 py-8">
+        <div className="border-4 border-[#0087b2] rounded-full p-3 sm:p-4">
+          <Hospital size={50} className="text-gray-800 sm:hidden" />
+          <Hospital size={65} className="text-gray-800 hidden sm:block lg:hidden" />
+          <Hospital size={80} className="text-gray-800 hidden lg:block" />
         </div>
-        <div className="bg-white rounded-2xl shadow-lg p-12 flex flex-col items-center gap-6 w-full max-w-md">
-          <h1 className="text-3xl font-bold text-gray-800">Painel do Médico</h1>
-          <p className="text-lg text-gray-800">Digite a senha para acessar</p>
+        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-9 lg:p-12 flex flex-col items-center gap-4 sm:gap-5 lg:gap-6 w-full max-w-md">
+          <h1 className="text-2xl sm:text-2xl lg:text-3xl font-bold text-gray-800">Painel do Médico</h1>
+          <p className="text-base sm:text-lg text-gray-800">Digite a senha para acessar</p>
           <input
             type="password"
             value={typedPassword}
             onChange={(e) => setTypedPassword(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
             placeholder="Senha"
-            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+            className="bg-slate-100 rounded-xl px-4 sm:px-5 py-3 sm:py-4 w-full outline-none text-gray-800 text-base sm:text-lg border border-gray-200"
           />
           <button
             disabled={loadingLogin}
             onClick={handleLogin}
-            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-12 py-4 rounded-xl text-xl transition-colors w-full disabled:opacity-50"
+            className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-xl text-lg sm:text-xl transition-colors w-full disabled:opacity-50"
           >
             {loadingLogin ? "Entrando..." : "Entrar"}
           </button>
-          {loginError && <p className="text-red-500 font-semibold text-lg text-center">{loginError}</p>}
+          {loginError && <p className="text-red-500 font-semibold text-base sm:text-lg text-center">{loginError}</p>}
         </div>
       </div>
     </main>
   );
 }
-
   // Main menu screen — shown after successful login
- if (!activeAction) {
+  if (!activeAction) {
   return (
-    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
       {panelHeader}
-      <div className="flex flex-1 items-center justify-center p-6 lg:p-10">
-        <div className="bg-[#ebf1f9] rounded-3xl p-6 lg:p-10 flex flex-col items-center gap-3 lg:gap-4s w-full max-w-2xl">
-          <h1 className="text-2xl lg:text-4xl font-bold text-[#00526d] mb-2 lg:mb-4 tracking-wide">MENU MÉDICO</h1>
+      <div className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-10">
+        <div className="bg-[#ebf1f9] rounded-3xl p-4 sm:p-6 lg:p-10 flex flex-col items-center gap-2 sm:gap-3 lg:gap-4 w-full max-w-2xl">
+          <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold text-[#00526d] mb-2 lg:mb-4 tracking-wide">MENU MÉDICO</h1>
           <button
             onClick={() => { setActiveAction("fila"); fetchOrderedQueue(); }}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
           >
             Buscar Fila Ordenada
           </button>
           <button
             onClick={() => { setActiveAction("proximo"); fetchNextPatient(); }}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
           >
             Buscar Próximo Paciente
           </button>
           <button
             onClick={() => setActiveAction("status")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
           >
             Buscar Status Paciente
           </button>
           <button
             onClick={() => setActiveAction("atualizar")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
           >
             Atualizar Status Paciente
           </button>
           <button
             onClick={() => setActiveAction("remover")}
-            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
+            className="bg-white hover:bg-slate-200 text-gray-700 font-semibold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors w-full border-3 border-gray-300 shadow-sm"
           >
             Remover Paciente
           </button>
           <button
             onClick={logout}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold px-8 py-3 lg:py-5 rounded-full text-lg lg:text-2xl transition-colors border-3 border-red-900 w-full mt-2"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold px-5 sm:px-8 py-3 lg:py-5 rounded-full text-base sm:text-lg lg:text-2xl transition-colors border-3 border-red-900 w-full mt-2"
           >
             LOGOUT
           </button>
@@ -454,26 +455,25 @@ export default function Medico() {
     </main>
   );
 }
-
   // Result screen — shown for actions that don't require input (queue / next patient)
   if (activeAction === "fila" || activeAction === "proximo") {
   return (
-    <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
       {panelHeader}
-      <div className="flex flex-col flex-1 items-center justify-between p-8">
+      <div className="flex flex-col flex-1 items-center justify-between p-4 sm:p-6 lg:p-8">
 
-        <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl overflow-y-auto max-h-[70vh]">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-7 lg:p-10 w-full max-w-3xl overflow-y-auto max-h-[65vh] sm:max-h-[70vh]">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">
             {activeAction === "fila" ? "Fila Ordenada" : "Próximo Paciente"}
           </h2>
-          <div className="text-gray-800 text-lg">
+          <div className="text-gray-800 text-base sm:text-lg">
             {resultDisplay}
           </div>
         </div>
 
         <button
           onClick={backToMenu}
-          className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg mt-6"
+          className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl text-base sm:text-lg transition-colors w-full max-w-lg mt-4 sm:mt-6"
         >
           Voltar ao Menu
         </button>
@@ -485,11 +485,11 @@ export default function Medico() {
 
   // Input screen — shown for actions that require a patient ID (status / update / remove)
   return (
-  <main className="h-screen bg-slate-100 flex flex-col overflow-hidden">
+  <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
     {panelHeader}
-    <div className="flex flex-col flex-1 items-center justify-between p-8">
-      <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-lg flex flex-col gap-6">
-        <h2 className="text-2xl font-bold text-gray-800">
+    <div className="flex flex-col flex-1 items-center justify-between p-4 sm:p-6 lg:p-8">
+      <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-7 lg:p-10 w-full max-w-lg flex flex-col gap-4 sm:gap-5 lg:gap-6">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-800">
           {activeAction === "status" && "Buscar Status do Paciente"}
           {activeAction === "atualizar" && "Atualizar Status do Paciente"}
           {activeAction === "remover" && "Remover Paciente"}
@@ -499,13 +499,13 @@ export default function Medico() {
           value={typedId}
           onChange={(e) => setTypedId(e.target.value)}
           placeholder="ID do paciente"
-          className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+          className="bg-slate-100 rounded-xl px-4 sm:px-5 py-3 sm:py-4 w-full outline-none text-gray-800 text-base sm:text-lg border border-gray-200"
         />
         {activeAction === "atualizar" && (
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="bg-slate-100 rounded-xl px-5 py-4 w-full outline-none text-gray-800 text-lg border border-gray-200"
+            className="bg-slate-100 rounded-xl px-4 sm:px-5 py-3 sm:py-4 w-full outline-none text-gray-800 text-base sm:text-lg border border-gray-200"
           >
             <option value="aguardando">Aguardando</option>
             <option value="em atendimento">Em atendimento</option>
@@ -515,17 +515,17 @@ export default function Medico() {
         <button
           disabled={loading}
           onClick={confirmAction}
-          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-8 py-4 rounded-xl text-lg transition-colors w-full disabled:opacity-50"
+          className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg transition-colors w-full disabled:opacity-50"
         >
           Confirmar
         </button>
-        <div className="text-gray-800 text-lg">
+        <div className="text-gray-800 text-base sm:text-lg">
           {resultDisplay}
         </div>
       </div>
       <button
         onClick={backToMenu}
-        className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors w-full max-w-lg mt-6"
+        className="bg-slate-400 hover:bg-slate-600 text-white font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl text-base sm:text-lg transition-colors w-full max-w-lg mt-4 sm:mt-6"
       >
         Voltar ao Menu
       </button>
