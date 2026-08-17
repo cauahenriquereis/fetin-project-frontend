@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, AlertCircle, CheckCircle } from "lucide-react";
 import { API_URL } from "@/config/api";
@@ -22,7 +22,7 @@ type PatientQueueInfo = {
   priority_number: number;
 }
 
-export default function Resultado() {
+function ResultadoContent() {
 
   const router = useRouter();
 
@@ -217,5 +217,13 @@ export default function Resultado() {
       </div>
 
     </main>
+  );
+}
+
+export default function Resultado() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-slate-100"></main>}>
+      <ResultadoContent />
+    </Suspense>
   );
 }
