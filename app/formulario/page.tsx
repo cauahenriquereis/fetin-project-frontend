@@ -91,7 +91,7 @@ export default function Formulario() {
   }
 
 return (
-    <main className="min-h-screen lg:h-screen bg-slate-100 flex flex-col overflow-y-auto lg:overflow-hidden">
+    <main className="min-h-screen bg-slate-100 flex flex-col overflow-y-auto">
 
       {/* Error modal */}
       {error && (
@@ -204,8 +204,8 @@ return (
                   key={level}
                   onClick={() => selectPainLevel(level)}
                   className={painLevel === level
-                    ? "bg-red-400 text-white rounded-xl w-10 h-10 lg:w-20 lg:h-20 font-bold text-base lg:text-2xl transition-colors"
-                    : "bg-white text-gray-800 rounded-xl w-10 h-10 lg:w-20 lg:h-20 font-bold text-base lg:text-2xl transition-colors border border-gray-200"}
+                    ? "bg-red-400 text-white rounded-xl w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base lg:text-xl xl:text-2xl transition-colors"
+                    : "bg-white text-gray-800 rounded-xl w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base lg:text-xl xl:text-2xl transition-colors border border-gray-200"}
                 >
                   {level}
                 </button>

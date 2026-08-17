@@ -374,7 +374,7 @@ export default function Medico() {
   // Login screen — shown when no valid session is found in sessionStorage
   if (!isLoggedIn) {
   return (
-    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
       {panelHeader}
       <div className="flex flex-col flex-1 items-center justify-center gap-5 sm:gap-6 lg:gap-8 px-4 py-8">
         <div className="border-4 border-[#0087b2] rounded-full p-3 sm:p-4">
@@ -406,10 +406,11 @@ export default function Medico() {
     </main>
   );
 }
+
   // Main menu screen — shown after successful login
-  if (!activeAction) {
+if (!activeAction) {
   return (
-    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
       {panelHeader}
       <div className="flex flex-1 items-center justify-center p-4 sm:p-6 lg:p-10">
         <div className="bg-[#ebf1f9] rounded-3xl p-4 sm:p-6 lg:p-10 flex flex-col items-center gap-2 sm:gap-3 lg:gap-4 w-full max-w-2xl">
@@ -458,7 +459,7 @@ export default function Medico() {
   // Result screen — shown for actions that don't require input (queue / next patient)
   if (activeAction === "fila" || activeAction === "proximo") {
   return (
-    <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
+    <main className="min-h-screen bg-slate-100 flex flex-col">
       {panelHeader}
       <div className="flex flex-col flex-1 items-center justify-between p-4 sm:p-6 lg:p-8">
 
@@ -482,10 +483,9 @@ export default function Medico() {
     </main>
   );
 }
-
   // Input screen — shown for actions that require a patient ID (status / update / remove)
   return (
-  <main className="min-h-screen sm:h-screen bg-slate-100 flex flex-col overflow-hidden">
+  <main className="min-h-screen bg-slate-100 flex flex-col">
     {panelHeader}
     <div className="flex flex-col flex-1 items-center justify-between p-4 sm:p-6 lg:p-8">
       <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-7 lg:p-10 w-full max-w-lg flex flex-col gap-4 sm:gap-5 lg:gap-6">
