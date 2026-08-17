@@ -78,10 +78,14 @@ function ResultadoContent() {
 
   }, [id, router]);
 
-  // Renders blank screen while waiting for data to avoid flash
   if (checkingSession || loading) return (
-    <main className="min-h-screen bg-slate-100"></main>
-  );
+  <main className="min-h-screen bg-slate-100 flex items-center justify-center">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-500 font-semibold">Carregando resultado...</p>
+    </div>
+  </main>
+);
 
   if (!id) return null;
 
