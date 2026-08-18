@@ -108,63 +108,63 @@ return (
         </div>
       )}
 
-      {/* Single column on mobile, two columns on desktop */}
+      {/* Single column on mobile/tablet, two columns on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_3px_1fr] flex-1 min-h-0">
 
         {/* Left column — personal data and symptoms */}
-        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 gap-8 lg:gap-1 h-full">
+        <div className="flex flex-col gap-6 md:gap-10 lg:gap-1 lg:justify-evenly p-6 md:p-10 lg:p-8 xl:p-12 lg:h-full">
 
           {/* Personal data section */}
-          <div className="flex flex-col gap-3 xl:gap-6">
-            <h2 className="text-[#0097b2] font-bold text-xl lg:text-2xl xl:text-3xl tracking-wide">DADOS PESSOAIS</h2>
+          <div className="flex flex-col gap-3 md:gap-5 xl:gap-6">
+            <h2 className="text-[#0097b2] font-bold text-xl md:text-2xl lg:text-2xl xl:text-3xl tracking-wide">DADOS PESSOAIS</h2>
 
-            <div className="flex flex-col gap-1 xl:gap-2">
-              <label className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">Nome completo:</label>
+            <div className="flex flex-col gap-1 md:gap-2">
+              <label className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">Nome completo:</label>
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Nome completo"
-                className="bg-blue-100 rounded-xl px-4 py-3 lg:py-3 xl:py-5 w-full outline-none text-gray-800 text-sm lg:text-base xl:text-xl"
+                className="bg-blue-100 rounded-xl px-4 py-3 md:py-4 lg:py-3 xl:py-5 w-full outline-none text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl"
               />
             </div>
 
-            <div className="flex flex-col gap-1 xl:gap-2">
-              <label className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">E-mail:</label>
+            <div className="flex flex-col gap-1 md:gap-2">
+              <label className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">E-mail:</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="bg-blue-100 rounded-xl px-4 py-3 lg:py-3 xl:py-5 w-full outline-none text-gray-800 text-sm lg:text-base xl:text-xl"
+                className="bg-blue-100 rounded-xl px-4 py-3 md:py-4 lg:py-3 xl:py-5 w-full outline-none text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl"
               />
             </div>  
 
-            <div className="flex flex-col gap-1 xl:gap-2">
-              <label className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">Idade:</label>
+            <div className="flex flex-col gap-1 md:gap-2">
+              <label className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">Idade:</label>
               <input
                 type="number"
                 value={age}
                 onChange={(e) => setAge(Number(e.target.value))}
                 placeholder="Idade"
-                className="bg-blue-100 rounded-xl px-4 py-3 lg:py-3 xl:py-5 w-24 lg:w-32 xl:w-40 outline-none text-gray-800 text-sm lg:text-base xl:text-xl"
+                className="bg-blue-100 rounded-xl px-4 py-3 md:py-4 lg:py-3 xl:py-5 w-24 md:w-36 lg:w-32 xl:w-40 outline-none text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl"
               />
             </div>
           </div>
 
           {/* Symptoms section */}
-          <div className="flex flex-col gap-3 xl:gap-6">
-            <h2 className="text-[#0097b2] font-bold text-xl lg:text-2xl xl:text-3xl tracking-wide mt-4 lg:mt-0">SINTOMAS</h2>
-            <p className="font-bold text-gray-800 text-sm lg:text-base xl:text-xl">Quais são seus sintomas?</p>
+          <div className="flex flex-col gap-3 md:gap-5 xl:gap-6">
+            <h2 className="text-[#0097b2] font-bold text-xl md:text-2xl lg:text-2xl xl:text-3xl tracking-wide mt-4 lg:mt-0">SINTOMAS</h2>
+            <p className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">Quais são seus sintomas?</p>
 
-            <div className="flex flex-wrap gap-2 lg:gap-3 xl:gap-5">
+            <div className="flex flex-wrap gap-2 md:gap-4 lg:gap-3 xl:gap-5">
               {["Febre", "Vômito", "Falta de ar", "Tontura", "Dor de cabeça", "Dor no peito"].map((symptom) => (
                 <button
                   key={symptom}
                   onClick={() => toggleSymptom(symptom)}
                   className={selectedSymptoms.includes(symptom)
-                    ? "bg-red-400 text-white rounded-xl px-4 py-2 lg:px-4 lg:py-3 xl:px-8 xl:py-5 text-sm lg:text-base xl:text-xl transition-colors"
-                    : "bg-white text-gray-800 rounded-xl px-4 py-2 lg:px-4 lg:py-3 xl:px-8 xl:py-5 text-sm lg:text-base xl:text-xl transition-colors border border-gray-200"}
+                    ? "bg-red-400 text-white rounded-xl px-4 py-2 md:px-6 md:py-3 lg:px-4 lg:py-3 xl:px-8 xl:py-5 text-sm md:text-lg lg:text-base xl:text-xl transition-colors"
+                    : "bg-white text-gray-800 rounded-xl px-4 py-2 md:px-6 md:py-3 lg:px-4 lg:py-3 xl:px-8 xl:py-5 text-sm md:text-lg lg:text-base xl:text-xl transition-colors border border-gray-200"}
                 >
                   {symptom}
                 </button>
@@ -177,35 +177,35 @@ return (
               onChange={(e) => setOtherSymptom(e.target.value)}
               placeholder="Outro:"
               className={otherSymptom
-                ? "bg-red-400 text-white rounded-xl px-4 py-3 lg:py-3 xl:py-5 w-full outline-none placeholder-white text-sm lg:text-base xl:text-xl"
-                : "bg-white text-gray-800 rounded-xl px-4 py-3 lg:py-3 xl:py-5 w-full outline-none border border-gray-200 text-sm lg:text-base xl:text-xl"}
+                ? "bg-red-400 text-white rounded-xl px-4 py-3 md:py-4 lg:py-3 xl:py-5 w-full outline-none placeholder-white text-sm md:text-lg lg:text-base xl:text-xl"
+                : "bg-white text-gray-800 rounded-xl px-4 py-3 md:py-4 lg:py-3 xl:py-5 w-full outline-none border border-gray-200 text-sm md:text-lg lg:text-base xl:text-xl"}
             />
           </div>
 
         </div>
 
-        {/* Vertical divider — hidden on mobile, visible on desktop */}
+        {/* Vertical divider — hidden on mobile/tablet, visible on desktop */}
         <div className="hidden lg:block bg-[#00526e] my-8 xl:my-16"></div>
 
-        {/* Horizontal divider — visible on mobile only */}
-        <div className="block lg:hidden h-[3px] bg-[#00526e] mx-6"></div>
+        {/* Horizontal divider — visible on mobile/tablet only */}
+        <div className="block lg:hidden h-[3px] bg-[#00526e] mx-6 my-4 md:my-8"></div>
 
         {/* Right column — pain level, submit and warning */}
-        <div className="flex flex-col justify-evenly p-6 lg:p-8 xl:p-12 h-full gap-8 lg:gap-6">
+        <div className="flex flex-col gap-6 md:gap-10 lg:gap-6 lg:justify-evenly p-6 md:p-10 lg:p-8 xl:p-12 lg:h-full">
 
         {/* Pain level section */}
-          <div className="flex flex-col gap-4 lg:gap-8">
-            <h2 className="text-[#0097b2] font-bold text-xl lg:text-3xl tracking-wide">NÍVEL DE DOR</h2>
-            <p className="font-bold text-gray-800 text-base lg:text-xl">Qual a intensidade da sua dor agora?</p>
+          <div className="flex flex-col gap-4 md:gap-6 lg:gap-8">
+            <h2 className="text-[#0097b2] font-bold text-xl md:text-2xl lg:text-3xl tracking-wide">NÍVEL DE DOR</h2>
+            <p className="font-bold text-gray-800 text-sm md:text-lg lg:text-xl">Qual a intensidade da sua dor agora?</p>
 
-            <div className="grid grid-cols-7 gap-2 lg:gap-5">
+            <div className="grid grid-cols-7 gap-2 md:gap-4 lg:gap-5">
               {painLevels.map((level) => (
                 <button
                   key={level}
                   onClick={() => selectPainLevel(level)}
                   className={painLevel === level
-                    ? "bg-red-400 text-white rounded-xl w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base lg:text-xl xl:text-2xl transition-colors"
-                    : "bg-white text-gray-800 rounded-xl w-10 h-10 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base lg:text-xl xl:text-2xl transition-colors border border-gray-200"}
+                    ? "bg-red-400 text-white rounded-xl w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base md:text-xl lg:text-xl xl:text-2xl transition-colors"
+                    : "bg-white text-gray-800 rounded-xl w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base md:text-xl lg:text-xl xl:text-2xl transition-colors border border-gray-200"}
                 >
                   {level}
                 </button>
@@ -217,16 +217,16 @@ return (
           <div className="flex justify-center mt-4 lg:mt-0">
             <button
               onClick={handleSubmit}
-              className="bg-[#0097b2] hover:bg-cyan-800 text-white font-bold px-12 py-4 lg:px-20 lg:py-5 xl:px-32 xl:py-7 rounded-xl text-lg lg:text-xl xl:text-3xl transition-colors shadow-lg w-full md:w-auto"
+              className="bg-[#0097b2] hover:bg-cyan-800 text-white font-bold px-12 py-4 md:px-16 md:py-5 lg:px-20 lg:py-5 xl:px-32 xl:py-7 rounded-xl text-lg md:text-2xl lg:text-xl xl:text-3xl transition-colors shadow-lg w-full md:w-auto"
             >
               Enviar
             </button>
           </div>
 
           {/* Warning box */}
-          <div className="bg-[#fffcc0] border border-yellow-300 rounded-xl p-4 lg:p-6 xl:p-10 mt-4 lg:mt-0">
-            <p className="text-yellow-700 font-bold text-base lg:text-lg xl:text-2xl mb-1 xl:mb-4">ATENÇÃO:</p>
-            <p className="text-yellow-700 text-sm lg:text-base xl:text-xl leading-relaxed">
+          <div className="bg-[#fffcc0] border border-yellow-300 rounded-xl p-4 md:p-8 lg:p-6 xl:p-10 mt-4 lg:mt-0">
+            <p className="text-yellow-700 font-bold text-base md:text-xl lg:text-lg xl:text-2xl mb-1 md:mb-3 xl:mb-4">ATENÇÃO:</p>
+            <p className="text-yellow-700 text-sm md:text-lg lg:text-base xl:text-xl leading-relaxed">
               Se você estiver em <span className="underline">risco imediato de vida</span>,
               informe a recepção diretamente sem aguardar a triagem.
             </p>
