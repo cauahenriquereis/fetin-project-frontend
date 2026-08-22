@@ -8,7 +8,6 @@ const emailSchema = z.object({
   email: z.string().email("Por favor, informe um e-mail válido."),
 })
 
-
 function validateEmail(email: string): boolean {
   try {
     emailSchema.parse({ email }); 
@@ -44,10 +43,6 @@ export default function Formulario() {
     }
   }
 
-  function selectPainLevel(level: number) {
-    setPainLevel(level);
-  }
-
   function validateForm(): boolean {
     if (fullName.trim() === "") {
       setError("Por favor, preencha o nome completo.");
@@ -59,7 +54,7 @@ export default function Formulario() {
       return false;
     }
 
-    if (Number(age) <= 0) {
+    if (Number(age) <= 0 || Number(age) > 120 ) {
       setError("Por favor, informe uma idade válida.");
       return false;
     }
@@ -202,7 +197,7 @@ return (
               {painLevels.map((level) => (
                 <button
                   key={level}
-                  onClick={() => selectPainLevel(level)}
+                  onClick={() => setPainLevel(level)}
                   className={painLevel === level
                     ? "bg-red-400 text-white rounded-xl w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base md:text-xl lg:text-xl xl:text-2xl transition-colors"
                     : "bg-white text-gray-800 rounded-xl w-10 h-10 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 font-bold text-base md:text-xl lg:text-xl xl:text-2xl transition-colors border border-gray-200"}

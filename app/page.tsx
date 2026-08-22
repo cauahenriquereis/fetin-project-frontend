@@ -38,7 +38,6 @@ export default function Home() {
         <p className="text-base sm:text-lg lg:text-2xl text-gray-800 text-center">Após o preenchimento das informações, você receberá sua senha.</p>
       </div>
 
-      {/* Start triage button — navigates to the patient form */}
       <Link href="/formulario" className="mt-6 sm:mt-8 lg:mt-12 z-10">
         <button className="bg-[#0087b2] hover:bg-[#00526d] text-white font-bold px-10 py-4 sm:px-14 sm:py-5 lg:px-20 lg:py-6 rounded-xl text-lg sm:text-xl lg:text-3xl transition-colors">
           Iniciar Triagem
