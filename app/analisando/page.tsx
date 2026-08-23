@@ -8,15 +8,12 @@ import { API_URL } from "@/config/api";
 export default function Analisando() {
   const router = useRouter();
 
-  // Prevents double submission in React Strict Mode
   const alreadySent = useRef(false);
 
   useEffect(() => {
     if (alreadySent.current) return;
     alreadySent.current = true;
 
-    // Reads triage data from sessionStorage and sends it to the backend for AI analysis
-    // Redirects to /formulario if data is missing or if the request fails
     async function sendForAnalysis() {
       const savedData = sessionStorage.getItem("dadosTriagem");
 
@@ -42,7 +39,6 @@ export default function Analisando() {
 
         const patient = await response.json();
 
-        // Navigates to the result page with the patient ID in the URL
         router.push(`/resultado?id=${patient.id}`);
 
       } catch (error) {

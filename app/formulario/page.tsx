@@ -72,7 +72,7 @@ export default function Formulario() {
 
   function handleSubmit() {
     if (validateForm()) {
-      const finalSymptoms = [...selectedSymptoms, otherSymptom].filter(Boolean).join(",");
+      const finalSymptoms = [...selectedSymptoms, otherSymptom].filter(Boolean).join(", ");
       const triageData = {
         full_name: fullName,
         email: email,

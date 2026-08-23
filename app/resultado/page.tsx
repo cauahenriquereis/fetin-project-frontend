@@ -26,7 +26,6 @@ function ResultadoContent() {
 
   const router = useRouter();
 
-  // Prevents double fetch in React Strict Mode
   const alreadyFetched = useRef(false);
 
   const searchParams = useSearchParams();
@@ -36,15 +35,10 @@ function ResultadoContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Prevents flash of loading screen before data is ready
-  const [checkingSession, setCheckingSession] = useState(true);
-
   useEffect(() => {
     if (alreadyFetched.current) return;
     alreadyFetched.current = true;
 
-    // Fetches patient data and queue info by ID from the backend
-    // Redirects to /formulario if ID is missing or request fails
     async function fetchPatientData(id: string) {
       setLoading(true);
       setError(null);
@@ -57,16 +51,13 @@ function ResultadoContent() {
         }
 
         const patientData = await response.json();
-        console.log("Dados recebidos:", patientData);
         setPatientInfo(patientData);
         setLoading(false);
-        setCheckingSession(false);
 
       } catch (error) {
         console.error("Erro ao buscar dados do paciente:", error);
         setLoading(false);
         setError("Erro ao buscar dados do paciente");
-        setCheckingSession(false);
       }
     }
 
@@ -78,7 +69,7 @@ function ResultadoContent() {
 
   }, [id, router]);
 
-  if (checkingSession || loading) return (
+  if (loading) return (
   <main className="min-h-screen bg-slate-100 flex items-center justify-center">
     <div className="flex flex-col items-center gap-4">
       <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
