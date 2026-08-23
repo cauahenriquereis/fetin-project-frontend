@@ -78,8 +78,6 @@ function ResultadoContent() {
   </main>
 );
 
-  if (!id) return null;
-
   if (error) return (
     <main className="min-h-screen bg-slate-100 flex items-center justify-center">
       <p className="text-2xl text-red-500">{error}</p>
