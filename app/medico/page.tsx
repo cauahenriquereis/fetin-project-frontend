@@ -19,7 +19,6 @@ type RemovalMessage = {
   mensagem: string;
 };
 
-// Union type to handle all possible response types from the doctor endpoints
 type DoctorData = PatientOutput | PatientOutput[] | RemovalMessage | null;
 
 type Tokens = {
@@ -29,16 +28,17 @@ type Tokens = {
 
 export default function Medico() {
 
+  //Login
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [typedPassword, setTypedPassword] = useState("");
   const [tokens, setTokens] = useState<Tokens | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
 
-  // Prevents login screen flash while checking sessionStorage on mount
+  //Session
   const [checkingSession, setCheckingSession] = useState(true);
 
-  // Controls which action screen is currently shown (null = main menu)
+  // Actions
   const [activeAction, setActiveAction] = useState<string | null>(null);
   const [typedId, setTypedId] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("aguardando");
@@ -47,8 +47,6 @@ export default function Medico() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Restores session from sessionStorage on page load
-  // Session expires when the tab is closed (sessionStorage behavior)
   useEffect(() => {
     const storedTokens = sessionStorage.getItem("medico_tokens");
     if (storedTokens) {
@@ -59,7 +57,6 @@ export default function Medico() {
     setCheckingSession(false);
   }, []);
 
-  // Authenticates the doctor with the backend and stores JWT tokens in sessionStorage
   async function handleLogin() {
     setLoadingLogin(true);
     setLoginError(null);
@@ -91,12 +88,21 @@ export default function Medico() {
     } catch (error) {
       console.error("Erro ao fazer login:", error);
       setLoadingLogin(false);
-      setLoginError("Erro ao fazer login. Tente novamente.");
+      setLoginError("Senha incorreta. Tente novamente.");
     }
   }
 
-  // Uses the refresh token to obtain a new access token when the current one expires (401)
-  // Calls logout() if the refresh token is also invalid
+  function logout() {
+    sessionStorage.removeItem("medico_tokens");
+    setTokens(null);
+    setIsLoggedIn(false);
+    setActiveAction(null);
+    setTypedId("");
+    setData(null);
+    setError(null);
+    setTypedPassword("");
+  }
+
   async function refreshToken() {
     if (!tokens) return null;
 
@@ -127,20 +133,6 @@ export default function Medico() {
     }
   }
 
-  // Clears all session data and returns the doctor to the login screen
-  function logout() {
-    sessionStorage.removeItem("medico_tokens");
-    setTokens(null);
-    setIsLoggedIn(false);
-    setActiveAction(null);
-    setTypedId("");
-    setData(null);
-    setError(null);
-    setTypedPassword("");
-  }
-
-  // Wrapper around fetch that injects the Authorization header
-  // Automatically attempts token refresh on 401 and retries the request
   async function fetchWithAuth(url: string, options: RequestInit = {}) {
     if (!tokens) {
       throw new Error("Sem tokens de autenticação");
@@ -171,7 +163,6 @@ export default function Medico() {
     return response;
   }
 
-  // Fetches all patients currently in the queue, ordered by priority
   async function fetchOrderedQueue() {
     setLoading(true);
     setError(null);
@@ -193,7 +184,6 @@ export default function Medico() {
     }
   }
 
-  // Fetches the next patient to be attended (highest priority in queue)
   async function fetchNextPatient() {
     setLoading(true);
     setError(null);
@@ -215,7 +205,6 @@ export default function Medico() {
     }
   }
 
-  // Fetches the current status and queue info of a specific patient by ID
   async function fetchPatientStatus(id: number) {
     setLoading(true);
     setError(null);
@@ -237,7 +226,6 @@ export default function Medico() {
     }
   }
 
-  // Updates the attendance status of a patient (aguardando / em atendimento / atendido)
   async function updatePatientStatus(id: number, status: string) {
     setLoading(true);
     setError(null);
@@ -264,7 +252,6 @@ export default function Medico() {
     }
   }
 
-  // Removes a patient from the queue by ID
   async function removePatient(id: number) {
     setLoading(true);
     setError(null);
@@ -289,8 +276,6 @@ export default function Medico() {
     }
   }
 
-  // Renders the correct UI based on the type of data received from the backend
-  // Handles: removal message, array of patients, or single patient object
   function renderInfo(info: DoctorData) {
     if (!info) return <p>Nenhum dado encontrado</p>;
 
@@ -322,7 +307,6 @@ export default function Medico() {
     );
   }
 
-  // Reusable result display — shows loading, error or data depending on current state
   const resultDisplay = (
     <>
       {loading && <p>Carregando...</p>}
@@ -330,8 +314,6 @@ export default function Medico() {
       {data && !loading && !error && renderInfo(data)}
     </>
   );
-
-  // Resets all action-related state and returns to the main menu
   function backToMenu() {
     setActiveAction(null);
     setTypedId("");
@@ -339,7 +321,6 @@ export default function Medico() {
     setError(null);
   }
 
-  // Validates the typed ID and dispatches the correct action function
   function confirmAction() {
     if (!typedId || Number(typedId) <= 0) {
       setError("Por favor, digite um ID válido");
@@ -353,7 +334,6 @@ export default function Medico() {
     else if (activeAction === "remover") removePatient(id);
   }
 
-  // Reusable header component rendered across all doctor panel screens
   const panelHeader = (
     <header className="bg-[#00526d] flex items-center px-10 py-6">
       <div className="flex items-center gap-4">
