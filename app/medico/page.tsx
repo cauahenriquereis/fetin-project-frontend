@@ -28,17 +28,14 @@ type Tokens = {
 
 export default function Medico() {
 
-  //Login
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [typedPassword, setTypedPassword] = useState("");
   const [tokens, setTokens] = useState<Tokens | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loadingLogin, setLoadingLogin] = useState(false);
 
-  //Session
   const [checkingSession, setCheckingSession] = useState(true);
 
-  // Actions
   const [activeAction, setActiveAction] = useState<string | null>(null);
   const [typedId, setTypedId] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("aguardando");
@@ -86,7 +83,6 @@ export default function Medico() {
       setLoadingLogin(false);
 
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
       setLoadingLogin(false);
       setLoginError("Senha incorreta. Tente novamente.");
     }
@@ -127,7 +123,6 @@ export default function Medico() {
       return updatedTokens;
 
     } catch (error) {
-      console.error("Erro ao refrescar token:", error);
       logout();
       return null;
     }
@@ -178,7 +173,6 @@ export default function Medico() {
       setLoading(false);
 
     } catch (error) {
-      console.error("Erro ao buscar dados da fila:", error);
       setLoading(false);
       setError("Erro ao buscar dados da fila");
     }
@@ -199,7 +193,6 @@ export default function Medico() {
       setLoading(false);
 
     } catch (error) {
-      console.error("Erro ao buscar próximo paciente da fila:", error);
       setLoading(false);
       setError("Erro ao buscar próximo paciente da fila");
     }
@@ -220,7 +213,6 @@ export default function Medico() {
       setLoading(false);
 
     } catch (error) {
-      console.error("Erro ao buscar status do paciente:", error);
       setLoading(false);
       setError("Erro ao buscar status do paciente");
     }
@@ -246,7 +238,6 @@ export default function Medico() {
       setLoading(false);
 
     } catch (error) {
-      console.error("Erro ao atualizar status do paciente:", error);
       setLoading(false);
       setError("Erro ao atualizar status do paciente");
     }
@@ -270,7 +261,6 @@ export default function Medico() {
       setLoading(false);
 
     } catch (error) {
-      console.error("Erro ao remover paciente:", error);
       setLoading(false);
       setError("Erro ao remover paciente");
     }
@@ -314,6 +304,7 @@ export default function Medico() {
       {data && !loading && !error && renderInfo(data)}
     </>
   );
+
   function backToMenu() {
     setActiveAction(null);
     setTypedId("");
@@ -348,7 +339,6 @@ export default function Medico() {
     </header>
   );
 
-  // Renders blank screen while checking sessionStorage to avoid login flash
   if (checkingSession) return null;
 
   // Login screen — shown when no valid session is found in sessionStorage
