@@ -4,9 +4,22 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {z} from "zod";
 
-const emailSchema = z.object({
-  email: z.string().email("Por favor, informe um e-mail válido."),
-})
+const emailSchema = z.string().email("Por favor, informe um e-mail válido.");
+
+const fullNameSchema = z.string().min(2, "Por favor, informe um nome completo válido.").regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "O nome não pode conter números ou símbolos.");
+
+function validateFullName(fullName: string): boolean {
+  try {
+    fullNameSchema.parse(fullName); 
+    return true;
+  }
+  catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error("Erro de validação de nome completo:");
+    }
+    return false;
+  }
+}
 
 function validateEmail(email: string): boolean {
   try {
@@ -48,9 +61,8 @@ export default function Formulario() {
       setError("Por favor, preencha o nome completo.");
       return false;
     }
-
-    if(email.trim() !== "" && validateEmail(email) === false) {
-      setError("Por favor, informe um e-mail válido.");
+    if (validateFullName(fullName) === false) {
+      setError("Por favor, informe um nome completo válido.");
       return false;
     }
 
