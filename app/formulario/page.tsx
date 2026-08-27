@@ -6,7 +6,7 @@ import {z} from "zod";
 
 const emailSchema = z.object({
   email: z.string().email("Por favor, informe um e-mail válido."),
-});
+})
 
 const fullNameSchema = z.string().min(2, "Por favor, informe um nome completo válido.").regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "O nome não pode conter números ou símbolos.");
 
@@ -65,6 +65,11 @@ export default function Formulario() {
     }
     if (validateFullName(fullName) === false) {
       setError("Por favor, informe um nome completo válido.");
+      return false;
+    }
+
+    if(email.trim() !== "" && validateEmail(email) === false) {
+      setError("Por favor, informe um e-mail válido.");
       return false;
     }
 
