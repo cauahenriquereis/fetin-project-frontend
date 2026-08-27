@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {z} from "zod";
 
-const emailSchema = z.string().email("Por favor, informe um e-mail válido.");
+const emailSchema = z.object({
+  email: z.string().email("Por favor, informe um e-mail válido."),
+});
 
 const fullNameSchema = z.string().min(2, "Por favor, informe um nome completo válido.").regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "O nome não pode conter números ou símbolos.");
 
