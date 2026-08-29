@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function SinaisVitaisContent() {
@@ -16,34 +16,36 @@ function SinaisVitaisContent() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function validateForm(): boolean {
+  useEffect(() => {
     if (!patientId) {
-      setError("Paciente não identificado. Volte ao formulário.");
-      return false;
+        router.push("/formulario");
     }
-    if (Number(systolicPressure) <= 0 || Number(systolicPressure) > 300) {
-      setError("Informe uma pressão sistólica válida.");
-      return false;
+  }, [patientId, router]);
+
+    function validateForm(): boolean {
+        if (systolicPressure !== "" && (Number(systolicPressure) <= 0 || Number(systolicPressure) > 300)) {
+            setError("Informe uma pressão sistólica válida.");
+            return false;
+        }
+        if (diastolicPressure !== "" && (Number(diastolicPressure) <= 0 || Number(diastolicPressure) > 200)) {
+            setError("Informe uma pressão diastólica válida.");
+            return false;
+        }
+        if (heartRate !== "" && (Number(heartRate) <= 0 || Number(heartRate) > 300)) {
+            setError("Informe uma frequência cardíaca válida.");
+            return false;
+        }
+        if (temperature !== "" && (Number(temperature) <= 30 || Number(temperature) > 45)) {
+            setError("Informe uma temperatura válida.");
+            return false;
+        }
+        if (oxygenSaturation !== "" && (Number(oxygenSaturation) <= 0 || Number(oxygenSaturation) > 100)) {
+            setError("Informe uma saturação de O2 válida.");
+            return false;
+        }
+        setError("");
+        return true;
     }
-    if (Number(diastolicPressure) <= 0 || Number(diastolicPressure) > 200) {
-      setError("Informe uma pressão diastólica válida.");
-      return false;
-    }
-    if (Number(heartRate) <= 0 || Number(heartRate) > 300) {
-      setError("Informe uma frequência cardíaca válida.");
-      return false;
-    }
-    if (Number(temperature) <= 30 || Number(temperature) > 45) {
-      setError("Informe uma temperatura válida.");
-      return false;
-    }
-    if (Number(oxygenSaturation) <= 0 || Number(oxygenSaturation) > 100) {
-      setError("Informe uma saturação de O2 válida.");
-      return false;
-    }
-    setError("");
-    return true;
-  }
 
   function handleSubmit() {
     if (!validateForm()) return;
@@ -51,12 +53,12 @@ function SinaisVitaisContent() {
      setLoading(true);
 
     const vitalSigns = {
-      temperature: Number(temperature),
-      systolic_pressure: Number(systolicPressure),
-      diastolic_pressure: Number(diastolicPressure),
-      heart_rate: Number(heartRate),
-      oxygen_saturation: Number(oxygenSaturation),
-    };
+    temperature: temperature !== "" ? Number(temperature) : null,
+    systolic_pressure: systolicPressure !== "" ? Number(systolicPressure) : null,
+    diastolic_pressure: diastolicPressure !== "" ? Number(diastolicPressure) : null,
+    heart_rate: heartRate !== "" ? Number(heartRate) : null,
+    oxygen_saturation: oxygenSaturation !== "" ? Number(oxygenSaturation) : null,
+  };
 
     sessionStorage.setItem("patientId", patientId as string);
     sessionStorage.setItem("sinaisVitais", JSON.stringify(vitalSigns));
