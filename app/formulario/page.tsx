@@ -50,6 +50,7 @@ export default function Formulario() {
   const [otherSymptom, setOtherSymptom] = useState("");
   const [painLevel, setPainLevel] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function toggleSymptom(symptom: string) {
     if (selectedSymptoms.includes(symptom)) {
@@ -102,6 +103,8 @@ export default function Formulario() {
     pain_level: painLevel,
   };
 
+  setLoading(true);
+
   try {
     const response = await fetch(`${API_URL}/patients/register`, {
       method: "POST",
@@ -112,12 +115,14 @@ export default function Formulario() {
     if (!response.ok) {
       setError("Não foi possível registrar o paciente. Tente novamente.");
       return;
+      setLoading(false);
     }
 
     const patient = await response.json();
     router.push(`/sinais-vitais?id=${patient.id}`);
   } catch {
     setError("Erro de conexão com o servidor. Tente novamente.");
+    setLoading(false);
   }
 }
 
@@ -254,7 +259,13 @@ return (
             >
               Enviar
             </button>
-          </div>
+          {loading && (
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-[#0097b2] border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-500 text-sm font-semibold">Enviando...</p>
+            </div>
+          )}
+        </div>
 
           {/* Warning box */}
           <div className="bg-[#fffcc0] border border-yellow-300 rounded-xl p-4 md:p-8 lg:p-6 xl:p-10 mt-4 lg:mt-0">

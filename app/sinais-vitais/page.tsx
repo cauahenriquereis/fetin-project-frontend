@@ -14,6 +14,7 @@ function SinaisVitaisContent() {
   const [temperature, setTemperature] = useState<number | string>("");
   const [oxygenSaturation, setOxygenSaturation] = useState<number | string>("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function validateForm(): boolean {
     if (!patientId) {
@@ -46,6 +47,8 @@ function SinaisVitaisContent() {
 
   function handleSubmit() {
     if (!validateForm()) return;
+
+     setLoading(true);
 
     const vitalSigns = {
       temperature: Number(temperature),
@@ -149,13 +152,22 @@ function SinaisVitaisContent() {
           </div>
         </div>
 
+        <div className="flex flex-col items-center gap-2">
         <button
-          onClick={handleSubmit}
-          className="bg-[#0097b2] hover:bg-cyan-800 text-white font-bold px-12 py-4 rounded-xl text-lg transition-colors shadow-lg self-center mt-2"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="bg-[#0097b2] hover:bg-cyan-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold px-12 py-4 rounded-xl text-lg transition-colors shadow-lg mt-2"
         >
-          Confirmar
+            Confirmar
         </button>
-      </div>
+        {loading && (
+            <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-[#0097b2] border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-gray-500 text-sm font-semibold">Enviando...</p>
+            </div>
+        )}
+        </div>
+    </div> 
     </main>
   );
 }
