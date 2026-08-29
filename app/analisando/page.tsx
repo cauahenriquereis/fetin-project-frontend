@@ -15,35 +15,39 @@ export default function Analisando() {
     alreadySent.current = true;
 
     async function sendForAnalysis() {
-      const savedData = sessionStorage.getItem("dadosTriagem");
+      const patientId = sessionStorage.getItem("patientId");
+      const savedVitals = sessionStorage.getItem("sinaisVitais");
 
-      if (!savedData) {
+      if (!patientId || !savedVitals) {
         router.push("/formulario");
         return;
       }
 
-      const triageData = JSON.parse(savedData);
+      const vitalSigns = JSON.parse(savedVitals);
 
       try {
-        const response = await fetch(`${API_URL}/patients/register`, {
-          method: "POST",
+        const response = await fetch(`${API_URL}/patients/${patientId}/vitals`, {
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(triageData),
+          body: JSON.stringify(vitalSigns),
         });
 
         if (!response.ok) {
-          throw new Error("Erro ao enviar os dados para análise");
+          throw new Error("Erro ao enviar os sinais vitais para análise");
         }
 
         const patient = await response.json();
+
+        sessionStorage.removeItem("patientId");
+        sessionStorage.removeItem("sinaisVitais");
 
         router.push(`/resultado?id=${patient.id}`);
 
       } catch (error) {
         console.error(error);
-        router.push("/formulario");
+        router.push(`/sinais-vitais?id=${patientId}`);
       }
     }
 
