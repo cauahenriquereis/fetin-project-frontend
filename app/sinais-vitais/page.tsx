@@ -77,12 +77,9 @@ function SinaisVitaisContent() {
       )}
 
       <div className="bg-white rounded-2xl shadow-lg p-6 md:p-10 w-full max-w-2xl flex flex-col gap-6">
-        <h2 className="text-[#0097b2] font-bold text-xl md:text-2xl tracking-wide">
+        <h2 className="text-[#0097b2] font-bold text-xl md:text-2xl tracking-wide text-center">
           SINAIS VITAIS
         </h2>
-        <p className="text-gray-500 text-sm md:text-base">
-          Preenchido pela enfermeira responsável pela triagem.
-        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
@@ -156,7 +153,7 @@ function SinaisVitaisContent() {
           onClick={handleSubmit}
           className="bg-[#0097b2] hover:bg-cyan-800 text-white font-bold px-12 py-4 rounded-xl text-lg transition-colors shadow-lg self-center mt-2"
         >
-          Confirmar e enviar para análise
+          Confirmar
         </button>
       </div>
     </main>
