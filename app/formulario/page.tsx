@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {z} from "zod";
+import { API_URL } from "@/config/api";
 
 const emailSchema = z.object({
   email: z.string().email("Por favor, informe um e-mail válido."),
@@ -89,20 +90,36 @@ export default function Formulario() {
     return true;
   }
 
-  function handleSubmit() {
-    if (validateForm()) {
-      const finalSymptoms = [...selectedSymptoms, otherSymptom].filter(Boolean).join(", ");
-      const triageData = {
-        full_name: fullName,
-        email: email,
-        age: Number(age),
-        symptoms: finalSymptoms,
-        pain_level: painLevel,
-      };
-      sessionStorage.setItem("dadosTriagem", JSON.stringify(triageData));
-      router.push("/analisando");
+  async function handleSubmit() {
+  if (!validateForm()) return;
+
+  const finalSymptoms = [...selectedSymptoms, otherSymptom].filter(Boolean).join(", ");
+  const triageData = {
+    full_name: fullName,
+    email: email,
+    age: Number(age),
+    symptoms: finalSymptoms,
+    pain_level: painLevel,
+  };
+
+  try {
+    const response = await fetch(`${API_URL}/patients/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(triageData),
+    });
+
+    if (!response.ok) {
+      setError("Não foi possível registrar o paciente. Tente novamente.");
+      return;
     }
+
+    const patient = await response.json();
+    router.push(`/sinais-vitais?id=${patient.id}`);
+  } catch {
+    setError("Erro de conexão com o servidor. Tente novamente.");
   }
+}
 
 return (
     <main className="min-h-screen bg-slate-100 flex flex-col overflow-y-auto">
