@@ -143,8 +143,10 @@ return (
               />
             </div>
 
-            <div className="flex flex-col gap-1 md:gap-2">
-              <label className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">E-mail:</label>
+            <div className="flex flex-col gap-1 md:gap-2">  
+              <label className="font-bold text-gray-800 text-sm md:text-lg lg:text-base xl:text-xl">
+                E-mail: <span className="font-normal text-gray-500">(opcional)</span>
+              </label>
               <input
                 type="email"
                 value={email}
