@@ -252,20 +252,21 @@ return (
           </div>   
 
           {/* Submit button */}
-          <div className="flex justify-center mt-4 lg:mt-0">
+          <div className="flex flex-col items-center gap-3 mt-4 lg:mt-0 w-full md:w-auto">
             <button
               onClick={handleSubmit}
-              className="bg-[#0097b2] hover:bg-cyan-800 text-white font-bold px-12 py-4 md:px-16 md:py-5 lg:px-20 lg:py-5 xl:px-32 xl:py-7 rounded-xl text-lg md:text-2xl lg:text-xl xl:text-3xl transition-colors shadow-lg w-full md:w-auto"
+              disabled={loading}
+              className="bg-[#0097b2] hover:bg-cyan-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold px-12 py-4 md:px-16 md:py-5 lg:px-20 lg:py-5 xl:px-32 xl:py-7 rounded-xl text-lg md:text-2xl lg:text-xl xl:text-3xl transition-colors shadow-lg w-full md:w-auto"
             >
               Enviar
             </button>
-          {loading && (
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-[#0097b2] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-500 text-sm font-semibold">Enviando...</p>
-            </div>
-          )}
-        </div>
+            {loading && (
+              <div className="flex items-center justify-center gap-2 w-full">
+                <div className="w-6 h-6 border-4 border-[#0097b2] border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-600 text-base font-semibold">Enviando...</p>
+              </div>
+            )}
+          </div>
 
           {/* Warning box */}
           <div className="bg-[#fffcc0] border border-yellow-300 rounded-xl p-4 md:p-8 lg:p-6 xl:p-10 mt-4 lg:mt-0">
