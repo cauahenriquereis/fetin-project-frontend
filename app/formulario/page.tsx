@@ -114,8 +114,8 @@ export default function Formulario() {
 
     if (!response.ok) {
       setError("Não foi possível registrar o paciente. Tente novamente.");
-      return;
       setLoading(false);
+      return;
     }
 
     const patient = await response.json();

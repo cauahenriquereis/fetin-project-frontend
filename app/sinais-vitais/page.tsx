@@ -91,7 +91,7 @@ function SinaisVitaisContent() {
             <input
               type="number"
               value={systolicPressure}
-              onChange={(e) => setSystolicPressure(Number(e.target.value))}
+              onChange={(e) => setSystolicPressure(e.target.value)}
               placeholder="Ex: 120"
               className="bg-blue-100 rounded-xl px-4 py-3 outline-none text-gray-800 text-sm md:text-base"
             />
@@ -104,7 +104,7 @@ function SinaisVitaisContent() {
             <input
               type="number"
               value={diastolicPressure}
-              onChange={(e) => setDiastolicPressure(Number(e.target.value))}
+              onChange={(e) => setDiastolicPressure(e.target.value)}
               placeholder="Ex: 80"
               className="bg-blue-100 rounded-xl px-4 py-3 outline-none text-gray-800 text-sm md:text-base"
             />
@@ -117,7 +117,7 @@ function SinaisVitaisContent() {
             <input
               type="number"
               value={heartRate}
-              onChange={(e) => setHeartRate(Number(e.target.value))}
+              onChange={(e) => setHeartRate(e.target.value)}
               placeholder="Ex: 78"
               className="bg-blue-100 rounded-xl px-4 py-3 outline-none text-gray-800 text-sm md:text-base"
             />
@@ -131,7 +131,7 @@ function SinaisVitaisContent() {
               type="number"
               step="0.1"
               value={temperature}
-              onChange={(e) => setTemperature(Number(e.target.value))}
+              onChange={(e) => setTemperature(e.target.value)}
               placeholder="Ex: 36.5"
               className="bg-blue-100 rounded-xl px-4 py-3 outline-none text-gray-800 text-sm md:text-base"
             />
@@ -144,7 +144,7 @@ function SinaisVitaisContent() {
             <input
               type="number"
               value={oxygenSaturation}
-              onChange={(e) => setOxygenSaturation(Number(e.target.value))}
+              onChange={(e) => setOxygenSaturation(e.target.value)}
               placeholder="Ex: 98"
               className="bg-blue-100 rounded-xl px-4 py-3 outline-none text-gray-800 text-sm md:text-base"
             />
