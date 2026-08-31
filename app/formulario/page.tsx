@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 import { useRouter } from "next/navigation";
 import {z} from "zod";
 import { API_URL } from "@/config/api";
@@ -51,6 +51,14 @@ export default function Formulario() {
   const [painLevel, setPainLevel] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+  const formError = sessionStorage.getItem("formError");
+  if (formError) {
+    setError(formError);
+    sessionStorage.removeItem("formError");
+  }
+}, []);
 
   function toggleSymptom(symptom: string) {
     if (selectedSymptoms.includes(symptom)) {

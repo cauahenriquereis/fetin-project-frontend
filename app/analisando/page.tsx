@@ -34,6 +34,18 @@ export default function Analisando() {
           body: JSON.stringify(vitalSigns),
         });
 
+        if (response.status === 422) {
+          const errorData = await response.json().catch(() => null);
+          const message = errorData?.detail || "Sintomas inválidos. Por favor, descreva o que está sentindo.";
+
+          sessionStorage.removeItem("patientId");
+          sessionStorage.removeItem("sinaisVitais");
+          sessionStorage.setItem("formError", message);
+        
+          router.push("/formulario");
+          return;
+        }
+
         if (!response.ok) {
           throw new Error("Erro ao enviar os sinais vitais para análise");
         }
