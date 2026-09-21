@@ -1,86 +1,76 @@
-# FETIN Triage - Frontend
+# FETIN Triage — Frontend
 
-Web interface for an AI-assisted hospital triage system. Patients register and report symptoms, a nurse records vital signs, and a doctor dashboard consumes a priority-ordered queue classified by generative AI.
+Web interface for an AI-assisted hospital triage system. Patients submit symptoms, nurses record vital signs, and doctors manage a priority-ordered queue from a protected dashboard.
 
-This repository contains the frontend. The backend API lives in a separate repository.
+The backend API is maintained in a separate repository: [fetin-project-backend](https://github.com/cauahenriquereis/fetin-project-backend).
 
-## Live Demo
+## Contents
 
-- 🌐 **App:** https://fetin-triagem-ia.vercel.app/
-- 🔗 **Backend repository:** https://github.com/cauahenriquereis/fetin-project-backend
-- 📑 **API docs (Swagger):** https://fetin-project-backend-production.up.railway.app/docs
-
-### Doctor dashboard
-
-> **Note:** The doctor dashboard (`/medico`) is password-protected. Feel free to reach out if you'd like demo credentials to explore it.
-
-**Login screen:**
-
-<img width="1919" height="997" alt="Doctor login screen" src="https://github.com/user-attachments/assets/345e42d9-c624-4845-982a-b35e59fdbeaa" />
-
-**Dashboard view:**
-
-<img width="1915" height="998" alt="Doctor dashboard" src="https://github.com/user-attachments/assets/c9d8111f-1f2a-41c9-9caa-3a2cd917b33d" />
-
-## Table of Contents
-
+- [Overview](#overview)
 - [Features](#features)
-- [Live Demo](#live-demo)
-- [Tech Stack](#tech-stack)
-- [Screens](#screens)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Variables](#environment-variables)
-  - [Running the App](#running-the-app)
-- [Project Structure](#project-structure)
+- [Screens and routes](#screens-and-routes)
+- [Tech stack](#tech-stack)
+- [Getting started](#getting-started)
+- [Project structure](#project-structure)
 - [Deployment](#deployment)
-- [Related Repository](#related-repository)
+- [Related repository](#related-repository)
 - [Roadmap](#roadmap)
+
+## Overview
+
+- **Live application:** [fetin-triagem-ia.vercel.app](https://fetin-triagem-ia.vercel.app/)
+- **Production API:** [Railway](https://fetin-project-backend-production.up.railway.app)
+- **API documentation:** [Swagger UI](https://fetin-project-backend-production.up.railway.app/docs)
+
+> The doctor dashboard at `/medico` is password-protected. Contact the project owner if you need demo credentials.
 
 ## Features
 
-- Patient self-service intake form (symptoms + optional contact email)
-- Nurse-facing vital signs screen (temperature, blood pressure, SpO2, heart rate) with client-side plausibility validation
-- Real-time "analyzing" screen while the backend runs AI urgency classification
-- Result screen showing the patient's queue position and estimated priority
-- Password-protected doctor dashboard for managing the live patient queue
-- Responsive layout (mobile and desktop)
+- Patient self-service intake form with symptoms and optional email
+- Nurse-facing vital-sign form for temperature, blood pressure, SpO₂, and heart rate
+- Client-side plausibility validation for vital signs
+- Loading state while the backend performs AI urgency classification
+- Result screen with queue position and priority
+- Password-protected doctor dashboard for managing the live queue
+- Responsive interface for desktop and mobile devices
 
-## Tech Stack
+## Screens and routes
 
-- **Framework:** Next.js (App Router)
+| Route | Description |
+| --- | --- |
+| `/` | Landing page |
+| `/formulario` | Patient symptom intake form |
+| `/sinais-vitais` | Nurse-facing vital-sign form |
+| `/analisando` | Loading state during AI classification |
+| `/resultado` | Patient queue position and priority |
+| `/medico` | Protected doctor queue dashboard |
+
+## Tech stack
+
+- **Framework:** Next.js 16 with App Router
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Hosting:** Vercel
+- **UI and styling:** Tailwind CSS
+- **Validation:** Zod
+- **Icons:** Lucide React
+- **Deployment:** Vercel
 
-## Screens
-
-| Route             | Description                                                        |
-|--------------------|---------------------------------------------------------------------|
-| `/`                | Home / landing page                                                 |
-| `/formulario`      | Patient intake form (symptoms, optional email)                     |
-| `/sinais-vitais`   | Nurse-facing screen to record vital signs                          |
-| `/analisando`      | Loading screen while the backend runs AI urgency classification    |
-| `/resultado`       | Shows the patient's queue position after classification            |
-| `/medico`          | Password-protected doctor dashboard for managing the queue         |
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-- Node.js 18+
-- The [backend API](https://github.com/cauahenriquereis/fetin-project-backend) running locally or accessible remotely
+- Node.js 18 or newer
+- npm
+- The [backend API](https://github.com/cauahenriquereis/fetin-project-backend) running locally or available remotely
 
 ### Installation
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/cauahenriquereis/fetin-project-frontend.git
+cd fetin-project-frontend
 npm install
 ```
 
-### Environment Variables
+### Environment variables
 
 Create a `.env.local` file in the project root:
 
@@ -88,48 +78,48 @@ Create a `.env.local` file in the project root:
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-The API base URL is read and validated in `config/api.ts`:
+`NEXT_PUBLIC_API_URL` must contain the base URL of the backend API. The application validates this variable when it starts. For production, configure it in the Vercel project environment settings.
 
-```typescript
-export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+### Available scripts
 
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL não está definida");
-}
-```
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run ESLint |
 
-> The app will throw at startup if this variable is not set.
-
-### Running the App
+### Run locally
 
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:3000`.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Project Structure
+Before opening a pull request, run the production build and linter:
 
+```bash
+npm run lint
+npm run build
 ```
+
+## Project structure
+
+```text
 .
 ├── app/
-│   ├── analisando/
-│   │   └── page.tsx
-│   ├── formulario/
-│   │   └── page.tsx
-│   ├── medico/
-│   │   └── page.tsx
-│   ├── resultado/
-│   │   └── page.tsx
-│   ├── sinais-vitais/
-│   │   └── page.tsx
-│   ├── favicon.ico
+│   ├── analisando/       # AI classification loading screen
+│   ├── formulario/       # Patient intake form
+│   ├── medico/           # Doctor dashboard
+│   ├── resultado/        # Queue result screen
+│   ├── sinais-vitais/    # Vital-sign form
 │   ├── globals.css
 │   ├── layout.tsx
-│   └── page.tsx               # Home
+│   └── page.tsx          # Home page
 ├── config/
-│   └── api.ts                 # API_URL env variable + validation
-├── public/
+│   └── api.ts            # API URL and environment validation
+├── public/               # Static assets
 ├── eslint.config.mjs
 ├── next.config.ts
 ├── postcss.config.mjs
@@ -139,12 +129,16 @@ The app will be available at `http://localhost:3000`.
 
 ## Deployment
 
-The frontend is deployed on [Vercel](https://vercel.com), connected to the GitHub repository for automatic deploys on push to the main branch.
+The frontend is deployed on [Vercel](https://vercel.com), connected to this GitHub repository for automatic deployments from `main`.
 
-## Related Repository
+## Related repository
 
-- **Backend API:** https://github.com/cauahenriquereis/fetin-project-backend
+- **Backend API:** [cauahenriquereis/fetin-project-backend](https://github.com/cauahenriquereis/fetin-project-backend)
 
 ## Roadmap
 
-- Optional Bluetooth integration with vital-sign measurement devices (thermometer, blood pressure monitor, pulse oximeter) — currently out of scope
+- Optional Bluetooth integration with vital-sign devices (thermometer, blood pressure monitor, and pulse oximeter), currently out of scope
+
+## License
+
+This project is available under the [MIT License](LICENSE).
