@@ -25,6 +25,18 @@
 
 FETIN Triage provides a guided workflow for hospital triage. The frontend coordinates the patient intake journey, communicates with the FastAPI backend, displays the AI analysis state, and gives the medical team a dedicated queue-management interface.
 
+### Doctor dashboard
+
+The doctor dashboard is available at `/medico` and is protected by password authentication. If you would like to explore this area, please contact the project owner to request demo credentials.
+
+**Login screen:**
+
+<img width="1919" height="997" alt="Doctor login screen" src="https://github.com/user-attachments/assets/345e42d9-c624-4845-982a-b35e59fdbeaa" />
+
+**Dashboard view:**
+
+<img width="1915" height="998" alt="Doctor dashboard" src="https://github.com/user-attachments/assets/c9d8111f-1f2a-41c9-9caa-3a2cd917b33d" />
+
 ### User journey
 
 ```text
