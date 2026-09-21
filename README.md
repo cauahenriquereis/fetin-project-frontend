@@ -1,66 +1,82 @@
 # FETIN Triage — Frontend
 
-Web interface for an AI-assisted hospital triage system. Patients submit symptoms, nurses record vital signs, and doctors manage a priority-ordered queue from a protected dashboard.
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Deployed_on-Vercel-black?logo=vercel" alt="Deployed on Vercel" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+</p>
 
-The backend API is maintained in a separate repository: [fetin-project-backend](https://github.com/cauahenriquereis/fetin-project-backend).
+<p align="center">
+  <strong>Web interface for an AI-assisted hospital triage system.</strong><br />
+  Patients report symptoms, nurses record vital signs, and doctors manage a priority queue from a protected dashboard.
+</p>
 
-## Contents
+<p align="center">
+  <a href="https://fetin-triagem-ia.vercel.app/">Live demo</a> ·
+  <a href="https://fetin-project-backend-production.up.railway.app/docs">API documentation</a> ·
+  <a href="https://github.com/cauahenriquereis/fetin-project-backend">Backend repository</a>
+</p>
 
-- [Overview](#overview)
-- [Features](#features)
-- [Screens and routes](#screens-and-routes)
-- [Tech stack](#tech-stack)
-- [Getting started](#getting-started)
-- [Project structure](#project-structure)
-- [Deployment](#deployment)
-- [Related repository](#related-repository)
-- [Roadmap](#roadmap)
+> **Project status:** Functional proof of concept deployed to production. This project is intended for demonstration and academic purposes and must not be used as a substitute for professional medical evaluation.
 
-## Overview
+## About the project
 
-- **Live application:** [fetin-triagem-ia.vercel.app](https://fetin-triagem-ia.vercel.app/)
-- **Production API:** [Railway](https://fetin-project-backend-production.up.railway.app)
-- **API documentation:** [Swagger UI](https://fetin-project-backend-production.up.railway.app/docs)
+FETIN Triage provides a guided workflow for hospital triage. The frontend coordinates the patient intake journey, communicates with the FastAPI backend, displays the AI analysis state, and gives the medical team a dedicated queue-management interface.
 
-> The doctor dashboard at `/medico` is password-protected. Contact the project owner if you need demo credentials.
+### User journey
+
+```text
+Patient submits symptoms
+          ↓
+Nurse records vital signs
+          ↓
+Backend classifies urgency with AI
+          ↓
+Patient receives queue position
+          ↓
+Doctor manages the priority queue
+```
 
 ## Features
 
-- Patient self-service intake form with symptoms and optional email
+- Patient self-service intake form with optional contact email
 - Nurse-facing vital-sign form for temperature, blood pressure, SpO₂, and heart rate
 - Client-side plausibility validation for vital signs
-- Loading state while the backend performs AI urgency classification
+- Clear loading state while the backend performs AI classification
 - Result screen with queue position and priority
-- Password-protected doctor dashboard for managing the live queue
-- Responsive interface for desktop and mobile devices
+- Password-protected doctor dashboard
+- Responsive experience for desktop and mobile devices
 
 ## Screens and routes
 
-| Route | Description |
+| Route | Purpose |
 | --- | --- |
 | `/` | Landing page |
-| `/formulario` | Patient symptom intake form |
-| `/sinais-vitais` | Nurse-facing vital-sign form |
-| `/analisando` | Loading state during AI classification |
-| `/resultado` | Patient queue position and priority |
-| `/medico` | Protected doctor queue dashboard |
+| `/formulario` | Patient symptom intake |
+| `/sinais-vitais` | Vital-sign registration |
+| `/analisando` | AI classification loading state |
+| `/resultado` | Queue position and priority |
+| `/medico` | Protected doctor dashboard |
 
-## Tech stack
+## Technology
 
 - **Framework:** Next.js 16 with App Router
 - **Language:** TypeScript
-- **UI and styling:** Tailwind CSS
+- **Styling:** Tailwind CSS 4
 - **Validation:** Zod
 - **Icons:** Lucide React
+- **Backend integration:** REST API with `fetch`
 - **Deployment:** Vercel
 
-## Getting started
+## Quick start
 
-### Prerequisites
+### Requirements
 
 - Node.js 18 or newer
 - npm
-- The [backend API](https://github.com/cauahenriquereis/fetin-project-backend) running locally or available remotely
+- A running instance of the [backend API](https://github.com/cauahenriquereis/fetin-project-backend)
 
 ### Installation
 
@@ -72,32 +88,32 @@ npm install
 
 ### Environment variables
 
-Create a `.env.local` file in the project root:
+Create `.env.local` in the project root:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-`NEXT_PUBLIC_API_URL` must contain the base URL of the backend API. The application validates this variable when it starts. For production, configure it in the Vercel project environment settings.
+`NEXT_PUBLIC_API_URL` must point to the backend base URL. For production, configure the same variable in the Vercel project settings.
 
-### Available scripts
-
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the development server |
-| `npm run build` | Create a production build |
-| `npm run start` | Start the production server |
-| `npm run lint` | Run ESLint |
-
-### Run locally
+### Development
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000).
 
-Before opening a pull request, run the production build and linter:
+### Available commands
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the development server |
+| `npm run lint` | Runs ESLint |
+| `npm run build` | Creates an optimized production build |
+| `npm run start` | Starts the production server |
+
+Before submitting changes, run:
 
 ```bash
 npm run lint
@@ -129,16 +145,18 @@ npm run build
 
 ## Deployment
 
-The frontend is deployed on [Vercel](https://vercel.com), connected to this GitHub repository for automatic deployments from `main`.
+The application is deployed on [Vercel](https://vercel.com) and configured for automatic deployments from the `main` branch.
 
-## Related repository
+## Related resources
 
 - **Backend API:** [cauahenriquereis/fetin-project-backend](https://github.com/cauahenriquereis/fetin-project-backend)
+- **Live application:** [fetin-triagem-ia.vercel.app](https://fetin-triagem-ia.vercel.app/)
+- **Swagger UI:** [fetin-project-backend-production.up.railway.app/docs](https://fetin-project-backend-production.up.railway.app/docs)
 
 ## Roadmap
 
-- Optional Bluetooth integration with vital-sign devices (thermometer, blood pressure monitor, and pulse oximeter), currently out of scope
+- Optional Bluetooth integration with vital-sign devices, currently out of scope
 
 ## License
 
-This project is available under the [MIT License](LICENSE).
+This project is distributed under the [MIT License](LICENSE).
