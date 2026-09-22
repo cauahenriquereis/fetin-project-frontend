@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
@@ -134,18 +135,25 @@ function ResultadoContent() {
   };
 
   return (
-  <main className="min-h-screen flex flex-col overflow-hidden">
+  <main className="min-h-screen flex flex-col overflow-hidden bg-slate-100">
 
-    {/* Dynamic header bar — color and icon change based on urgency level */}
-    <div className={`flex flex-col sm:flex-row items-center gap-2 sm:gap-4 px-4 sm:px-8 py-3 sm:py-4 ${config.headerColor}`}>
-      <div className={`border-2 border-white rounded-lg px-8 sm:px-14 lg:px-20 py-1 flex items-center gap-2 ${config.badgeColor}`}>
-        {config.headerIcon}
-        <span className="text-white font-bold text-base sm:text-lg lg:text-xl">{patientInfo.patient.urgency_level.toUpperCase()}</span>
+   {/* Dynamic header bar — color and icon change based on urgency level */}
+    <div className={`flex flex-col sm:flex-row items-center sm:justify-between gap-2 sm:gap-4 px-4 sm:px-8 py-3 sm:py-4 ${config.headerColor}`}>
+      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+        <div className={`border-2 border-white rounded-lg px-8 sm:px-14 lg:px-20 py-1 flex items-center gap-2 ${config.badgeColor}`}>
+          {config.headerIcon}
+          <span className="text-white font-bold text-base sm:text-lg lg:text-xl">{patientInfo.patient.urgency_level.toUpperCase()}</span>
+        </div>
+        <p className="text-white font-semibold text-sm sm:text-lg lg:text-xl text-center">
+          Triagem concluída para {patientInfo.patient.full_name}, {patientInfo.patient.age} anos
+        </p>
       </div>
-      <p className="text-white font-semibold text-sm sm:text-lg lg:text-xl text-center">
-        Triagem concluída para {patientInfo.patient.full_name}, {patientInfo.patient.age} anos
-      </p>
-    </div>
+
+        <Link href="/" className="text-white/90 hover:text-white font-semibold text-sm sm:text-base underline transition-colors">
+          ← Retornar à tela inicial
+        </Link>
+      </div>
+
 
     {/* Main content — two columns on desktop, stacked on mobile */}
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_1px_1fr] flex-1">
@@ -204,7 +212,7 @@ function ResultadoContent() {
         </div>
 
       </div>
-
+      
     </div>
 
   </main>
