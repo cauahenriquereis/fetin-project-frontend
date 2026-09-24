@@ -293,6 +293,7 @@ export default function Medico() {
         <p>Idade: {info.age}</p>
         <p>Urgência: {info.urgency_level}</p>
         <p>Status: {info.status}</p>
+        <p>Sintomas: {info.symptoms}</p>
       </div>
     );
   }
